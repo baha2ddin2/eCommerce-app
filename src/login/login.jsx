@@ -105,7 +105,7 @@ function CustomButton() {
 
 function SignUpLink() {
   return (
-    <Link href="/" variant="body2">
+    <Link href="signin" variant="body2">
       Sign up
     </Link>
   );
