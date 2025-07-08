@@ -4,6 +4,7 @@ import Home from './home/home'
 import Login from './login/login'
 import ForgetPassword from './forgetPass/forgepass'
 import SignIn from './signin/signin'
+import Store from './store/store'
 
 
 function App() {
@@ -15,8 +16,8 @@ function App() {
           <Route path="/login" element={<Login/>} />
           <Route path='/forgot-password' element={<ForgetPassword/>}/>
           <Route path='/signin' element={<SignIn/>}/>
+          <Route path='/store' element={<Store/>}/>
           <Route path="*" element={<h1>Page Not Found</h1>} />
-
         </Routes>
     </BrowserRouter>
   );
