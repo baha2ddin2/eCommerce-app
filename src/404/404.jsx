@@ -6,7 +6,6 @@ export default  function Notfound(){
             <h1 className="whoops">Whoops!</h1>
             <p className="para">Something went wrong</p>
         </div>
-        
         </>
     )
 

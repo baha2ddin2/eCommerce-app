@@ -19,9 +19,8 @@ function App() {
             <Route path='/home/item/:id' element={<Item/>}/>
             <Route path='/home/cart' element={<Cart/>}/>
             <Route path='/home/profil' element={<Profil/>}/>
-
           </Route>
-          <Route path="/login" element={<Login/>} />
+          <Route path="/" index element={<Login/>} />
           <Route path='/forgot-password' element={<ForgetPassword/>}/>
           <Route path='/signin' element={<SignIn/>}/>
           <Route path="*" element={<Notfound/>} />

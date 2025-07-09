@@ -18,8 +18,10 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {AppProvider} from '@toolpad/core/AppProvider';
 import { SignInPage } from '@toolpad/core/SignInPage';
 import { useTheme } from '@mui/material/styles';
+import axios from 'axios';
 
 const providers = [{id: 'credentials', name: 'Email and Password'}];
+
 
 function CustomEmailField() {
   return (
@@ -123,13 +125,13 @@ function Title() {
   return <h2 style={{ marginBottom: 8 }}>Login</h2>;
 }
 
-function Subtitle() {
-  return (
-    <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '100%' }} severity="warning">
-      We are investigating an ongoing outage.
-    </Alert>
-  );
-}
+// function Subtitle(err) {
+//   return (
+//     <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '100%' }} severity="error">
+//       {err}
+//     </Alert>
+//   );
+// }
 
 function RememberMeCheckbox() {
   const theme = useTheme();
@@ -156,17 +158,35 @@ function RememberMeCheckbox() {
 
 export default function Login() {
   const theme = useTheme();
+  const [res,setRes]= useState(null)
+  const [err,setErr]=useState(null)
   return (
     <AppProvider theme={theme}>
       <SignInPage
-        signIn={(provider, formData) =>
-          alert(
-            `Logging in with "${provider.name}" and credentials: ${formData.get('email')}, ${formData.get('password')}, and checkbox value: ${formData.get('remember')}`,
-          )
-        }
+        signIn={(provider, formData) =>{
+          axios.post('http://localhost:3001/login', {
+              email: formData.get('email'),
+              password: formData.get('password')
+            })
+            .then(function (response) {
+              setRes(response.data.token)
+              console.log(response.data.token)
+            })
+            .catch(function (error) {
+              const errorMsg = error.response.data.error;
+              setErr(errorMsg)
+            }
+            );
+        }}
         slots={{
           title: Title,
-          subtitle: Subtitle,
+          subtitle: () =>{
+          return (
+            err?
+            <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '100%' }} severity="error">
+              {err}
+            </Alert>: ""
+          )},
           emailField: CustomEmailField,
           passwordField: CustomPasswordField,
           submitButton: CustomButton,
@@ -177,6 +197,7 @@ export default function Login() {
         slotProps={{ form: { noValidate: true } }}
         providers={providers}
       />
+      {JSON.stringify(res)}
     </AppProvider>
   );
 }
