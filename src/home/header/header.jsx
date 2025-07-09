@@ -8,7 +8,9 @@ export default  function CustomHeader() {
         <>
         <nav style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 20px", backgroundColor: "#f8f8f8"}}>
             <div>
-                <h1>LOGO</h1>
+                <Link href="/home" underline="none">
+                    <h1>LOGO</h1>
+                </Link>
             </div>
              <div>
                 <Link href="/home" underline="none">
@@ -20,8 +22,12 @@ export default  function CustomHeader() {
                 <Search/>
             </div>
             <div style={{display: "flex", gap: "20px", alignItems: "center"}}>
-                <FaceIcon  />
-                <ShoppingCartIcon/>
+                <Link href="/home/profil" underline="none">
+                    <FaceIcon/>
+                </Link>
+                <Link href="/home/cart" underline="none">
+                    <ShoppingCartIcon/>
+                </Link>
             </div>
 
         </nav>

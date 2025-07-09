@@ -1,0 +1,21 @@
+*{
+    margin: 0;
+}
+.body {
+  display: inline-block;
+  background: #00AFF9 url(https://cbwconline.com/IMG/Codepen/Unplugged.png) center/cover no-repeat;
+  height: 100vh;
+  margin: 0;
+  width: 100vw;
+  color: white;
+}
+
+.whoops {
+  margin: .8em 3rem;
+  font: 4em Roboto;
+}
+.para {
+  display: inline-block;
+  margin: .2em 3rem;
+  font: 2em Roboto;
+}

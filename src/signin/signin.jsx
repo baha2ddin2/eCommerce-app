@@ -44,6 +44,15 @@ export default function SignIn() {
                         fullWidth
                         sx={{ mb: 2 }}
                     />
+                    <TextField
+                        label="Name"
+                        name="name"
+                        type="text"
+                        size="small"
+                        required
+                        fullWidth
+                        sx={{ mb: 2 }}
+                    />
 
                     {/* Email Field */}
                     <TextField

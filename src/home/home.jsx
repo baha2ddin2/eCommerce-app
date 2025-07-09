@@ -1,7 +1,9 @@
-export default function Home() {
-    return (
-        <div>
-            <h1>Welcome to the Home Page</h1>
-        </div>
-    );
-}
+import CustomHeader from "./header/header"
+import { Outlet } from "react-router-dom"
+ export default function Home() {
+  return (
+    <>
+        <CustomHeader/>
+        <Outlet/>
+    </>
+  )}
