@@ -170,10 +170,11 @@ export default function Login() {
             })
             .then(function (response) {
               setRes(response.data.token)
+              setErr(null)
               console.log(response.data.token)
             })
             .catch(function (error) {
-              const errorMsg = error.response.data.error;
+              const errorMsg = error.response.data.error || 'Something went wrong. Please try again.';
               setErr(errorMsg)
             }
             );
@@ -181,12 +182,12 @@ export default function Login() {
         slots={{
           title: Title,
           subtitle: () =>{
-          return (
-            err?
+            return(
+          err &&(
             <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '100%' }} severity="error">
               {err}
-            </Alert>: ""
-          )},
+            </Alert>
+          ))},
           emailField: CustomEmailField,
           passwordField: CustomPasswordField,
           submitButton: CustomButton,
