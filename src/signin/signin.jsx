@@ -1,27 +1,55 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {Button,FormControl,InputLabel,OutlinedInput,TextField,InputAdornment,Card,CardContent,Alert,IconButton,Box} from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import axios from 'axios';
+
 
 function Title() {
   return <h2 style={{ marginBottom: 8,textAlign:'center' }}>sign in</h2>;
 }
 
-function Subtitle() {
-  return (
-    <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '95%' }} severity="warning">
-      We are investigating an ongoing outage.
-    </Alert>
-  );
-}
+// function Subtitle() {
+//   return (
+//     <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '95%' }} severity="error">
+//       We are investigating an ongoing outage.
+//     </Alert>
+//   );
+// }
 
 
 export default function SignIn() {
     const [showPassword, setShowPassword] = useState(false);
+    const refUser=useRef()
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
-    const handleMouseDownPassword = (event) => event.preventDefault();
+    const handleClickShowcheckPassword = () => setShowPassword((show) => !show);
+    const handleMouseDownPassword = (event) =>event.preventDefault();
+    const handleMouseDowncheckPassword = (event) =>event.preventDefault();
+    const [err,setErr] = useState(null)
+    const [res,setRes] = useState(null)
+
+    const handelsignin=(event)=>{
+        event.preventDefault()
+        console.log(refUser.current.value)
+        axios.post('http://localhost:3001/api/users', {
+            user:"",
+            name:"",
+            email:"",
+            password:"",
+            phone:"",
+            })
+            .then(function (response) {
+              setRes(response.data.token)
+              setErr(null)
+              console.log(response.data.token)
+            })
+            .catch(function (error) {
+              const errorMsg = error.response.data.error || 'Something went wrong. Please try again.';
+              setErr(errorMsg)
+            })
+    }
     return (
         <>
         <Box
@@ -34,12 +62,15 @@ export default function SignIn() {
             <Card sx={{ width: 362, p: 2, boxShadow: 4 }} >
                 <CardContent>
                     <Title/>
-                    <Subtitle/>
+                    {err ?<Alert sx={{ mb: 2, px: 1, py: 0.25, width: '95%' }} severity="error">
+                        {err}
+                    </Alert> :""}
                     <TextField
                         label="User Name"
                         name="user"
                         type="text"
                         size="small"
+                        inputRef={refUser}
                         required
                         fullWidth
                         sx={{ mb: 2 }}
@@ -117,8 +148,8 @@ export default function SignIn() {
                             <InputAdornment position="end">
                             <IconButton
                                 aria-label="toggle password visibility"
-                                onClick={handleClickShowPassword}
-                                onMouseDown={handleMouseDownPassword}
+                                onClick={handleClickShowcheckPassword}
+                                onMouseDown={handleMouseDowncheckPassword}
                                 edge="end"
                                 size="small"
                             >
@@ -154,12 +185,14 @@ export default function SignIn() {
                         size="small"
                         disableElevation
                         fullWidth
+                        onClick={handelsignin}
                         sx={{ my: 2 }}
                     >
                         sign in
                     </Button>
                 </CardContent>
             </Card>
+            {res}
         </Box>
         </>
   );

@@ -125,14 +125,6 @@ function Title() {
   return <h2 style={{ marginBottom: 8 }}>Login</h2>;
 }
 
-// function Subtitle(err) {
-//   return (
-//     <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '100%' }} severity="error">
-//       {err}
-//     </Alert>
-//   );
-// }
-
 function RememberMeCheckbox() {
   const theme = useTheme();
   return (
