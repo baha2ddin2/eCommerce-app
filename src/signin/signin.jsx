@@ -5,48 +5,58 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
 
-
 function Title() {
   return <h2 style={{ marginBottom: 8,textAlign:'center' }}>sign in</h2>;
 }
 
-// function Subtitle() {
-//   return (
-//     <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '95%' }} severity="error">
-//       We are investigating an ongoing outage.
-//     </Alert>
-//   );
-// }
-
-
 export default function SignIn() {
     const [showPassword, setShowPassword] = useState(false);
     const refUser=useRef()
-
+    const refName = useRef()
+    const refEmail = useRef()
+    const refPassword = useRef()
+    const refCheckPassword = useRef()
+    const refPhone = useRef()
+    const user = refUser.current.value
+    const name= refName.current.value
+    const email = refEmail.current.value
+    const password = refPassword.current.value
+    const checkPassword = refCheckPassword.current.value
+    const phone = refPhone.current.value
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleClickShowcheckPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) =>event.preventDefault();
     const handleMouseDowncheckPassword = (event) =>event.preventDefault();
     const [err,setErr] = useState(null)
-    const [res,setRes] = useState(null)
-
-    const handelsignin=(event)=>{
+    const handelsignin = (event)=>{
         event.preventDefault()
-        console.log(refUser.current.value)
+        if(password.trim.length === 0){
+            setErr("")
+
+        } else if  (password !== checkPassword){
+            setErr("the password do not match")
+            return
+        }
         axios.post('http://localhost:3001/api/users', {
-            user:"",
-            name:"",
-            email:"",
-            password:"",
-            phone:"",
+            user:user,
+            name: name,
+            email:email,
+            password:password,
+            phone: phone,
             })
             .then(function (response) {
-              setRes(response.data.token)
-              setErr(null)
-              console.log(response.data.token)
+                localStorage.setItem('token',response.data.token)
+                setErr(null)
+                refName.current.value = ""
+                refUser.current.value = ""
+                refEmail.current.value = ""
+                refPassword.current.value = ""
+                refCheckPassword.current.value = ""
+                refPhone.current.value = ""
+
             })
             .catch(function (error) {
-              const errorMsg = error.response.data.error || 'Something went wrong. Please try again.';
+              const errorMsg = error?.response?.data?.error || 'Something went wrong. Please try again.';
               setErr(errorMsg)
             })
     }
@@ -67,7 +77,6 @@ export default function SignIn() {
                     </Alert> :""}
                     <TextField
                         label="User Name"
-                        name="user"
                         type="text"
                         size="small"
                         inputRef={refUser}
@@ -77,19 +86,18 @@ export default function SignIn() {
                     />
                     <TextField
                         label="Name"
-                        name="name"
                         type="text"
                         size="small"
+                        inputRef={refName}
                         required
                         fullWidth
                         sx={{ mb: 2 }}
                     />
-
                     {/* Email Field */}
                     <TextField
                         id="input-with-icon-textfield"
                         label="Email"
-                        name="email"
+                        inputRef={refEmail}
                         type="email"
                         size="small"
                         required
@@ -103,7 +111,6 @@ export default function SignIn() {
                         ),
                         }}
                     />
-
                     {/* Password Field */}
                     <FormControl sx={{ mb: 2 }} fullWidth variant="outlined">
                         <InputLabel size="small" htmlFor="outlined-adornment-password">
@@ -112,7 +119,7 @@ export default function SignIn() {
                         <OutlinedInput
                         id="outlined-adornment-password"
                         type={showPassword ? 'text' : 'password'}
-                        name="password"
+                        inputRef={refPassword}
                         size="small"
                         endAdornment={
                             <InputAdornment position="end">
@@ -121,8 +128,7 @@ export default function SignIn() {
                                 onClick={handleClickShowPassword}
                                 onMouseDown={handleMouseDownPassword}
                                 edge="end"
-                                size="small"
-                            >
+                                size="small">
                                 {showPassword ? (
                                 <VisibilityOff fontSize="inherit" />
                                 ) : (
@@ -142,7 +148,7 @@ export default function SignIn() {
                         <OutlinedInput
                         id="outlined-adornment-password"
                         type={showPassword ? 'text' : 'password'}
-                        name="checkPassword"
+                        inputRef={refCheckPassword}
                         size="small"
                         endAdornment={
                             <InputAdornment position="end">
@@ -169,7 +175,7 @@ export default function SignIn() {
                     <TextField
                         id="input-with-icon-textfield"
                         label="Phone"
-                        name="phone"
+                        inputRef={refPhone}
                         type="phone"
                         size="small"
                         required
@@ -186,10 +192,7 @@ export default function SignIn() {
                         disableElevation
                         fullWidth
                         onClick={handelsignin}
-                        sx={{ my: 2 }}
-                    >
-                        sign in
-                    </Button>
+                        sx={{ my: 2 }}> sign in </Button>
                 </CardContent>
             </Card>
             {res}
