@@ -1,13 +1,9 @@
-import { useRef, useState } from 'react';
+import { useRef, useState ,  } from 'react';
 import {Button,FormControl,InputLabel,OutlinedInput,TextField,InputAdornment,Card,CardContent,Alert,IconButton,Box} from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
-
-function Title() {
-  return <h2 style={{ marginBottom: 8,textAlign:'center' }}>sign in</h2>;
-}
 
 export default function SignIn() {
     const [showPassword, setShowPassword] = useState(false);
@@ -17,27 +13,53 @@ export default function SignIn() {
     const refPassword = useRef()
     const refCheckPassword = useRef()
     const refPhone = useRef()
-    const user = refUser.current.value
-    const name= refName.current.value
-    const email = refEmail.current.value
-    const password = refPassword.current.value
-    const checkPassword = refCheckPassword.current.value
-    const phone = refPhone.current.value
+
+    const userRegex = /^[a-zA-Z0-9_]{3,20}$/;
+    const nameRegex = /^[a-zA-Z ]{2,40}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/;
+    const phoneRegex = /^(06|07)\d{8}$/
+
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleClickShowcheckPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) =>event.preventDefault();
     const handleMouseDowncheckPassword = (event) =>event.preventDefault();
-    const [err,setErr] = useState(null)
+    const [err,setErr] = useState([])
     const handelsignin = (event)=>{
+        //todo : fix the error
         event.preventDefault()
-        if(password.trim.length === 0){
-            setErr("")
+        const user = refUser.current.value
+        const name= refName.current.value
+        const email = refEmail.current.value
+        const password = refPassword.current.value
+        const checkPassword = refCheckPassword.current.value
+        const phone = refPhone.current.value
 
-        } else if  (password !== checkPassword){
-            setErr("the password do not match")
-            return
+        if (!user || !name || !email || !password || !checkPassword || !phone) {
+            setErr(['All fields are required', ...err])
         }
-        axios.post('http://localhost:3001/api/users', {
+
+        if (!userRegex.test(user)) {
+            setErr(['Username must be 3–20 characters (letters, numbers, underscores)',err]);
+        }
+        if(!emailRegex.test(email)){
+            setErr(["Invalid email format",...err])
+        }
+        if(!nameRegex.test(name)){
+            setErr(["Name must contain only letters and spaces (2–40 characters)",...err])
+        }
+        if(!passwordRegex.test(password)){
+            setErr(["'Password must be at least 6 characters and include letters and numbers",...err])
+        }else if (password !== checkPassword){
+            setErr(["the password do not match", ...err])
+        }
+
+        if (!phoneRegex.test(phone)) {
+            setErr(['Phone must be a valid Moroccan number (starts with 06 or 07, 10 digits)',...err]);
+        }
+
+        if(err.length !==0){
+            axios.post('http://localhost:3001/api/users', {
             user:user,
             name: name,
             email:email,
@@ -53,12 +75,13 @@ export default function SignIn() {
                 refPassword.current.value = ""
                 refCheckPassword.current.value = ""
                 refPhone.current.value = ""
-
             })
             .catch(function (error) {
               const errorMsg = error?.response?.data?.error || 'Something went wrong. Please try again.';
               setErr(errorMsg)
             })
+
+        }
     }
     return (
         <>
@@ -71,9 +94,13 @@ export default function SignIn() {
         >
             <Card sx={{ width: 362, p: 2, boxShadow: 4 }} >
                 <CardContent>
-                    <Title/>
+                    <h2 style={{ marginBottom: 8,textAlign:'center' }}>sign in</h2>
                     {err ?<Alert sx={{ mb: 2, px: 1, py: 0.25, width: '95%' }} severity="error">
-                        {err}
+                        <ul>
+                        {err.map((value,key)=>{
+                            return <li key={key}>{value}</li>
+                        }
+                        )}</ul>
                     </Alert> :""}
                     <TextField
                         label="User Name"
@@ -195,7 +222,6 @@ export default function SignIn() {
                         sx={{ my: 2 }}> sign in </Button>
                 </CardContent>
             </Card>
-            {res}
         </Box>
         </>
   );
