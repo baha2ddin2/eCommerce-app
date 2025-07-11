@@ -14,19 +14,12 @@ export default function SignIn() {
     const refCheckPassword = useRef()
     const refPhone = useRef()
 
-    const userRegex = /^[a-zA-Z0-9_]{3,20}$/;
-    const nameRegex = /^[a-zA-Z ]{2,40}$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/;
-    const phoneRegex = /^(06|07)\d{8}$/
-
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleClickShowcheckPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) =>event.preventDefault();
     const handleMouseDowncheckPassword = (event) =>event.preventDefault();
     const [err,setErr] = useState([])
     const handelsignin = (event)=>{
-        //todo : fix the error
         event.preventDefault()
         const user = refUser.current.value
         const name= refName.current.value
@@ -35,30 +28,45 @@ export default function SignIn() {
         const checkPassword = refCheckPassword.current.value
         const phone = refPhone.current.value
 
-        if (!user || !name || !email || !password || !checkPassword || !phone) {
-            setErr(['All fields are required', ...err])
+        function validateInputs({ user, name, email, password, checkPassword, phone }) {
+            if (!user || !name || !email || !password || !checkPassword || !phone) {
+                return 'All fields are required';
+            }
+            const userRegex = /^[a-zA-Z0-9_]{3,20}$/;
+            if (!userRegex.test(user)) {
+                return 'Username must be 3–20 characters (letters, numbers, underscores)';
+            }
+
+            const nameRegex = /^[a-zA-Z ]{2,40}$/;
+            if (!nameRegex.test(name)) {
+                return 'Name must contain only letters and spaces (2–40 characters)';
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return 'Invalid email format';
+            }
+
+            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/;
+            if (!passwordRegex.test(password)) {
+                return 'Password must be at least 6 characters and include letters and numbers';
+            }
+
+            if (password !== checkPassword) {
+                return 'Passwords do not match';
+            }
+
+            const phoneRegex = /^(06|07)\d{8}$/;
+            if (!phoneRegex.test(phone)) {
+                return 'Phone must be a valid Moroccan number (starts with 06 or 07, 10 digits)';
+            }
+
+            return null;
         }
 
-        if (!userRegex.test(user)) {
-            setErr(['Username must be 3–20 characters (letters, numbers, underscores)',err]);
-        }
-        if(!emailRegex.test(email)){
-            setErr(["Invalid email format",...err])
-        }
-        if(!nameRegex.test(name)){
-            setErr(["Name must contain only letters and spaces (2–40 characters)",...err])
-        }
-        if(!passwordRegex.test(password)){
-            setErr(["'Password must be at least 6 characters and include letters and numbers",...err])
-        }else if (password !== checkPassword){
-            setErr(["the password do not match", ...err])
-        }
+        setErr(validateInputs({user,name,email,password,checkPassword,phone}))
 
-        if (!phoneRegex.test(phone)) {
-            setErr(['Phone must be a valid Moroccan number (starts with 06 or 07, 10 digits)',...err]);
-        }
-
-        if(err.length !==0){
+        if(!err){
             axios.post('http://localhost:3001/api/users', {
             user:user,
             name: name,
@@ -95,13 +103,7 @@ export default function SignIn() {
             <Card sx={{ width: 362, p: 2, boxShadow: 4 }} >
                 <CardContent>
                     <h2 style={{ marginBottom: 8,textAlign:'center' }}>sign in</h2>
-                    {err ?<Alert sx={{ mb: 2, px: 1, py: 0.25, width: '95%' }} severity="error">
-                        <ul>
-                        {err.map((value,key)=>{
-                            return <li key={key}>{value}</li>
-                        }
-                        )}</ul>
-                    </Alert> :""}
+                    {err ? <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '95%' }} severity="error">{err}</Alert> :""}
                     <TextField
                         label="User Name"
                         type="text"
