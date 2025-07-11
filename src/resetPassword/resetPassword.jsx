@@ -3,9 +3,11 @@ import {Button,FormControl,InputLabel,OutlinedInput,InputAdornment,Card,CardCont
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 export default function ResetPassword() {
     const [showPassword, setShowPassword] = useState(false);
+    const {user ,token} =useParams()
     const refPassword = useRef()
     const refCheckPassword = useRef()
 
@@ -15,6 +17,7 @@ export default function ResetPassword() {
     const handleMouseDowncheckPassword = (event) =>event.preventDefault();
     const [err,setErr] = useState([])
     const handelsignin = (event)=>{
+
         event.preventDefault()
         const password = refPassword.current.value
         const checkPassword = refCheckPassword.current.value
@@ -39,8 +42,8 @@ export default function ResetPassword() {
         setErr(validateInputs({password,checkPassword}))
 
         if(!err){
-            axios.put('http://localhost:3001/api/users', {
-            password:password,
+            axios(`http://localhost:3001/api/password/reset-password/${user}/${token}`, {
+                password:password,
             })
             .then(function (response) {
                 localStorage.setItem('token',response.data.token)
