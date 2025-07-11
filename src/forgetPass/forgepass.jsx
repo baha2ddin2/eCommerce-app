@@ -1,10 +1,6 @@
 import * as React from 'react';
-import {
-  Button,
-  TextField,
-  InputAdornment,
-  Alert,
-} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import {Button,TextField,InputAdornment,Alert,} from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { SignInPage } from '@toolpad/core/SignInPage';
@@ -43,7 +39,7 @@ function Title() {
 
 export default function ForgotPassword() {
   const [err,setErr]=React.useState(null)
-
+  const navigate = useNavigate();
   const theme = useTheme();
   return (
     <AppProvider theme={theme}>
@@ -54,9 +50,10 @@ export default function ForgotPassword() {
           })
           .then(function (response) {
               setErr(null)
+              navigate('/succes-page')
             })
             .catch(function (error) {
-              const errorMsg = error.response.data.error || 'Something went wrong. Please try again.';
+              const errorMsg = error.response.data.det || 'Something went wrong. Please try again.';
               setErr(errorMsg)
             }
             )
