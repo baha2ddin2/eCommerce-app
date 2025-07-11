@@ -9,6 +9,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { SignInPage } from '@toolpad/core/SignInPage';
 import { useTheme } from '@mui/material/styles';
+import axios from 'axios';
 
 const providers = [{ id: 'credentials', name: 'Email and Password' }];
 
@@ -36,52 +37,56 @@ function CustomEmailField() {
   );
 }
 
-function CustomButton() {
-  return (
-    <Button
-      type="submit"
-      variant="outlined"
-      color="info"
-      size="small"
-      disableElevation
-      fullWidth
-      sx={{ my: 2 }}
-    >
-      send 
-    </Button>
-  );
-}
-
 function Title() {
   return <h2 style={{ marginBottom: 8 }}>send email reset password</h2>;
 }
 
-function Subtitle() {
-  return (
-    <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '100%' }} severity="warning">
-      We are investigating an ongoing outage.
-    </Alert>
-  );
-}
-
-
-
 export default function ForgotPassword() {
+  const [err,setErr]=React.useState(null)
+
   const theme = useTheme();
   return (
     <AppProvider theme={theme}>
       <SignInPage
-        signIn={(provider, formData) =>
-          alert(
-            `Logging in with "${provider.name}" and credentials: ${formData.get('email')}`,
-          )
+        signIn={( provider, formData) =>
+          axios.post("http://localhost:3001/api/password/reset",{
+            email : formData.get("email")
+          })
+          .then(function (response) {
+              setErr(null)
+            })
+            .catch(function (error) {
+              const errorMsg = error.response.data.error || 'Something went wrong. Please try again.';
+              setErr(errorMsg)
+            }
+            )
         }
         slots={{
           title: Title,
-          subtitle: Subtitle,
+          subtitle: err && (()=>{
+            return (
+              <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '100%' }} severity="error">
+                {err}
+              </Alert>
+            )}),
           emailField: CustomEmailField,
           passwordField: () => null,
-          submitButton: CustomButton,
+          submitButton: ()=>{
+            return (
+              <Button
+                type="submit"
+                variant="outlined"
+                color="info"
+                size="small"
+                disableElevation
+                fullWidth
+                sx={{ my: 2 }}
+              >
+                send
+              </Button>
+            );
+
+          },
         }}
         slotProps={{ form: { noValidate: true } }}
         providers={providers}

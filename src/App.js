@@ -8,6 +8,7 @@ import Notfound from './404/404'
 import Item from './home/item/item'
 import Cart from './home/cart/cart'
 import Profil from './home/profile/profile'
+import ResetPassword from './resetPassword/resetPassword'
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           </Route>
           <Route path="/" index element={<Login/>} />
           <Route path='/forgot-password' element={<ForgetPassword/>}/>
+          <Route path='/reset-password/:user/:token' element={<ResetPassword/>}/>
           <Route path='/signin' element={<SignIn/>}/>
           <Route path="*" element={<Notfound/>} />
         </Routes>
