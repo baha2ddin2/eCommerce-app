@@ -7,7 +7,7 @@ import SignIn from './signin/signin'
 import Notfound from './404/404'
 import Item from './home/item/item'
 import Cart from './home/cart/cart'
-import Profil from './home/profile/profile'
+import {Profil} from './home/profile/profile'
 import ResetPassword from './resetPassword/resetPassword'
 import SuccessPage from './succes page/succesPage'
 import axios from 'axios'
@@ -19,9 +19,9 @@ function App() {
     <BrowserRouter>
         <Routes>
           <Route path="/home" element={<Home/>} >
-              <Route path='/home/item/:id' element={<Item/>}/>
-              <Route path='/home/cart' element={<Cart/>}/>
-              <Route path='/home/profil/:user' element={<Profil/>}/>
+              <Route path='item/:id' element={<Item/>}/>
+              <Route path='cart' element={<Cart/>}/>
+              <Route path='profil/:user' element={<Profil/>}/>
           </Route>
           <Route path="/" index element={<Login/>} />
           <Route path='/forgot-password' element={<ForgetPassword/>}/>

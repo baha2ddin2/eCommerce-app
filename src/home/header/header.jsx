@@ -3,6 +3,7 @@ import FaceIcon from '@mui/icons-material/Face';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Search from "./search/search";
 import { useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
 export default function CustomHeader() {
   const [user, setUser] = useState(null);
@@ -29,13 +30,13 @@ export default function CustomHeader() {
       }}
     >
       <div>
-        <Link href="/home" underline="none">
+        <Link component={RouterLink} to="/home" underline="none">
           <h1>LOGO</h1>
         </Link>
       </div>
 
       <div>
-        <Link href="/home" underline="none">
+        <Link component={RouterLink} to="/home" underline="none">
           <h2 style={{ color: "black" }}>Home</h2>
         </Link>
       </div>
@@ -47,15 +48,15 @@ export default function CustomHeader() {
       <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
         {user ? (
           <>
-            <Link href={`/home/profil/${user.user}`} underline="none">
+            <Link component={RouterLink} to={`profil/${user.user}`} underline="none">
               <FaceIcon />
             </Link>
-            <Link href={`/home/cart/${user.user}`} underline="none">
+            <Link component={RouterLink} to={`cart/${user.user}`} underline="none">
               <ShoppingCartIcon />
             </Link>
           </>
         ) : (
-          <Link href="/login" underline="none">
+          <Link component={RouterLink} to="/" underline="none">
             <FaceIcon />
           </Link>
         )}
