@@ -2,24 +2,38 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
+import { Card, CardContent, Typography, CircularProgress } from '@mui/material';
+
 
 export default function Profil(){
-    const [res,setRes]=useState(null)
-    const {user}= useParams()
+    const {userParam}= useParams()
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     useEffect(()=>{
-        axios(`http://localhost:3001/api/users/${user}`
-            )
+        axios.get(`http://localhost:3001/api/users/${userParam}`)
         .then((response)=>{
-            setRes(response.data)
+            setUser(response)
+            setLoading(false)
+            console.log(response)
         }).catch((error) => {
             console.error("Axios error:", error);
-            setRes({ error: error.message });
+            setLoading(false)
         });
 
-    }, [user] )
+    }, [userParam] )
+
+    if (!user) return <Typography variant="h6" color="error">User not found</Typography>;
+    if (loading) return <CircularProgress style={{ margin: 100 }} />;
     return(
         <>
-            {JSON.stringify(res)}
+            <Card style={{ maxWidth: 500, margin: '50px auto', padding: 20 }}>
+                <CardContent>
+                    <Typography variant="h5" gutterBottom>User Profile</Typography>
+                    <Typography><strong>Name:</strong> {user}</Typography>
+                    <Typography><strong>Email:</strong> {user}</Typography>
+                    <Typography><strong>Joined:</strong> {new Date(user).toLocaleDateString()}</Typography>
+                </CardContent>
+            </Card>
         </>
     )
 }
