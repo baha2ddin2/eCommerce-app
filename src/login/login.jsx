@@ -1,17 +1,6 @@
 import {useState} from 'react';
-import {
-  Button,
-  FormControl,
-  Checkbox,
-  FormControlLabel,
-  InputLabel,
-  OutlinedInput,
-  TextField,
-  InputAdornment,
-  Link,
-  Alert,
-  IconButton,
-} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import {Button,FormControl,Checkbox,FormControlLabel,InputLabel,OutlinedInput,TextField,InputAdornment,Link,Alert,IconButton,} from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -149,6 +138,7 @@ function RememberMeCheckbox() {
 }
 
 export default function Login() {
+  const navigate = useNavigate()
   const theme = useTheme();
   const [res,setRes]= useState(null)
   const [err,setErr]=useState(null)
@@ -161,12 +151,14 @@ export default function Login() {
               password: formData.get('password')
             })
             .then(function (response) {
-              setRes(response.data.token)
+              localStorage.setItem("token",response?.data?.token)
+              localStorage.setItem("user",JSON.stringify(response.data.info))
               setErr(null)
-              console.log(response.data.token)
+              navigate("/home")
+
             })
             .catch(function (error) {
-              const errorMsg = error.response.data.error || 'Something went wrong. Please try again.';
+              const errorMsg =  error?.response?.data?.error || error?.message || 'Something went wrong. Please try again.';
               setErr(errorMsg)
             }
             );

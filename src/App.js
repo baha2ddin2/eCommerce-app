@@ -10,9 +10,10 @@ import Cart from './home/cart/cart'
 import Profil from './home/profile/profile'
 import ResetPassword from './resetPassword/resetPassword'
 import SuccessPage from './succes page/succesPage'
-
+import axios from 'axios'
 
 function App() {
+  axios.defaults.headers.common['token'] = localStorage.getItem("token");
 
     return (
     <BrowserRouter>
@@ -20,7 +21,7 @@ function App() {
           <Route path="/home" element={<Home/>} >
               <Route path='/home/item/:id' element={<Item/>}/>
               <Route path='/home/cart' element={<Cart/>}/>
-              <Route path='/home/profil' element={<Profil/>}/>
+              <Route path='/home/profil/:user' element={<Profil/>}/>
           </Route>
           <Route path="/" index element={<Login/>} />
           <Route path='/forgot-password' element={<ForgetPassword/>}/>
