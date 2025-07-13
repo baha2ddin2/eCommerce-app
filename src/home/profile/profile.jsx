@@ -10,12 +10,16 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
+import { useDispatch  } from "react-redux";
+import { logoutUser } from "../../slices/user";
+
 
 export  function Profil(){
     const {user}= useParams()
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     useEffect(()=>{
         axios.get(`http://localhost:3001/api/users/${user}`)
         .then((response)=>{
@@ -36,7 +40,7 @@ export  function Profil(){
     };
 
     const handlelogout = () => {
-      localStorage.clear()
+      dispatch(logoutUser)
       navigate("/")
       setOpen(false);
     };

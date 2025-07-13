@@ -14,6 +14,20 @@ export const forgetPassword = createAsyncThunk(
             return thunkAPI.rejectWithValue(errorMsg)
         }
 })
+export const logoutUser = createAsyncThunk(
+    "user/logoutUser",async (thunkAPI)=>{
+        try {
+            const response =  await axios.post('http://localhost:3001/login', {
+                withCredentials: true  // this is required for cookies!
+            })
+            return response
+        } catch (error) {
+            const errorMsg = error?.response?.data?.error || 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+        }
+
+    }
+)
 
 export const resetPassword =createAsyncThunk(
     "user/resetPassword",async({user,token,password},thunkAPI)=>{
@@ -36,7 +50,9 @@ export const loginUser = createAsyncThunk(
         const response = await axios.post('http://localhost:3001/login', {
                 email: email,
                 password: password
-              })
+            }, {
+                withCredentials: true
+            })
         return response.data
 
     } catch (error) {
@@ -47,8 +63,8 @@ export const loginUser = createAsyncThunk(
 );
 
 export const registerUser = createAsyncThunk(
-  "user/registerUser",
-  async ({ user, name, email, password, phone }, thunkAPI) => {
+    "user/registerUser",
+    async ({ user, name, email, password, phone }, thunkAPI) => {
     try {
       const response = await axios.post("http://localhost:3001/api/users", {
         user,
@@ -56,7 +72,9 @@ export const registerUser = createAsyncThunk(
         email,
         password,
         phone,
-      });
+    }, {
+        withCredentials: true
+    });
 
       return response.data.info;
     } catch (error) {
@@ -123,6 +141,13 @@ const  UserSlice = createSlice({
 
             })
             .addCase(resetPassword.rejected,(state,action )=>{
+                state.error = action.payload
+            })
+            .addCase(logoutUser.fulfilled,(state,action)=>{
+                state.error = null
+
+            })
+            .addCase(logout.rejected,(state,action )=>{
                 state.error = action.payload
             })
         }

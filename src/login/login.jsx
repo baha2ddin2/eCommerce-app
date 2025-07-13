@@ -155,7 +155,6 @@ export default function Login() {
 
           if (loginUser.fulfilled.match(resultAction)) {
             navigate("/home");
-
           }
 
         }}
