@@ -7,7 +7,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {AppProvider} from '@toolpad/core/AppProvider';
 import { SignInPage } from '@toolpad/core/SignInPage';
 import { useTheme } from '@mui/material/styles';
-import axios from 'axios';
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "./store/UserSlice";
+
 
 const providers = [{id: 'credentials', name: 'Email and Password'}];
 
@@ -138,38 +140,33 @@ function RememberMeCheckbox() {
 }
 
 export default function Login() {
+  const dispatch = useDispatch();
+  const reduxError = useSelector((state) => state.user.error);
   const navigate = useNavigate()
   const theme = useTheme();
-  const [res,setRes]= useState(null)
-  const [err,setErr]=useState(null)
   return (
     <AppProvider theme={theme}>
       <SignInPage
-        signIn={(provider, formData) =>{
-          axios.post('http://localhost:3001/login', {
-              email: formData.get('email'),
-              password: formData.get('password')
-            })
-            .then(function (response) {
-              localStorage.setItem("token",response?.data?.token)
-              localStorage.setItem("user",JSON.stringify(response.data.info))
-              setErr(null)
-              navigate("/home")
+        signIn={async (provider, formData) =>{
+          const email = formData.get("email");
+          const password = formData.get("password");
 
-            })
-            .catch(function (error) {
-              const errorMsg =  error?.response?.data?.error || error?.message || 'Something went wrong. Please try again.';
-              setErr(errorMsg)
-            }
-            );
+          const resultAction = await dispatch(loginUser({ email, password }));
+
+          if (loginUser.fulfilled.match(resultAction)) {
+            navigate("/home");
+
+          }
+
         }}
+
         slots={{
           title: Title,
           subtitle: () =>{
             return(
-          err &&(
+          reduxError &&(
             <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '100%' }} severity="error">
-              {err}
+              {reduxError}
             </Alert>
           ))},
           emailField: CustomEmailField,
@@ -182,7 +179,6 @@ export default function Login() {
         slotProps={{ form: { noValidate: true } }}
         providers={providers}
       />
-      {JSON.stringify(res)}
     </AppProvider>
   );
 }

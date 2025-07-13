@@ -35,11 +35,15 @@ export  function Profil(){
       setOpen(true);
     };
 
-    const handleClose = () => {
-      setOpen(false);
+    const handlelogout = () => {
       localStorage.clear()
       navigate("/")
+      setOpen(false);
     };
+
+    const handleClose = ()=>{
+      setOpen(false);
+    }
 
     if (!user) return <Typography variant="h6" color="error">User not found</Typography>;
     if (loading) return <CircularProgress style={{ margin: 100 }} />;
@@ -54,7 +58,7 @@ export  function Profil(){
                     <Typography><strong>PHONE:</strong> {userData.phone}</Typography>
                     <Typography><strong>JOINED :</strong> {new Date(userData.created_at).toLocaleDateString()}</Typography>
                 </CardContent>
-                <Button variant="outlined" color="error" onClick={handleClickOpen}>
+                <Button variant="contained" color="error" onClick={handleClickOpen}>
                   logout
                 </Button>
             </Card>
@@ -71,7 +75,7 @@ export  function Profil(){
                   <Button autoFocus onClick={handleClose}>
                     Cancel
                   </Button>
-                  <Button onClick={handleClose} color="error" autoFocus>
+                  <Button onClick={handlelogout} color="error" autoFocus>
                     Yes, log me out
                   </Button>
                 </DialogActions>
