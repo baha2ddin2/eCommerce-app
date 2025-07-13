@@ -1,6 +1,22 @@
 import { createSlice , createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+export const forgetPassword = createAsyncThunk(
+    "user/forgetpassword",
+    async ({email},thunkAPI)=>{
+        try {
+            const response = await axios.post("http://localhost:3001/api/password/reset",{
+                email : email
+            })
+            return response
+        }catch(error){
+            const errorMsg = error.response.data.det || 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+        }
+    }
+)
+
+
 export const loginUser = createAsyncThunk(
   "user/loginUser",
   async ({ email, password }, thunkAPI) => {
@@ -59,10 +75,6 @@ const  UserSlice = createSlice({
         },
     },extraReducers:(builder)=>{
          builder
-         .addCase(registerUser.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
             .addCase(registerUser.fulfilled, (state, action) => {
                 const { id, name, email, phone } = action.payload;
                 state.user = id;
@@ -72,7 +84,6 @@ const  UserSlice = createSlice({
 
             })
             .addCase(registerUser.rejected, (state, action) => {
-                state.loading = false;
                 state.error = action.payload;
             })
 
@@ -86,8 +97,15 @@ const  UserSlice = createSlice({
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.error = action.payload;
-            });
-            }
+            })
+
+            .addCase(forgetPassword.fulfilled,(state,action)=>{
+
+            })
+            .addCase(forgetPassword.rejected,(state,action )=>{
+                state.error= action.payload
+            })
+        }
 })
 
 export const {logout} = UserSlice.actions
