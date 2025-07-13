@@ -2,7 +2,7 @@ import { createSlice , createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const forgetPassword = createAsyncThunk(
-    "user/forgetpassword",
+    "user/forgetPassword",
     async ({email},thunkAPI)=>{
         try {
             const response = await axios.post("http://localhost:3001/api/password/reset",{
@@ -13,8 +13,20 @@ export const forgetPassword = createAsyncThunk(
             const errorMsg = error.response.data.det || 'Something went wrong. Please try again.';
             return thunkAPI.rejectWithValue(errorMsg)
         }
-    }
-)
+})
+
+export const resetPassword =createAsyncThunk(
+    "user/resetPassword",async({user,token,password},thunkAPI)=>{
+        try{
+            const response = await axios(`http://localhost:3001/api/password/reset-password/${user}/${token}`, {
+                    password:password,
+                })
+            return response
+        }catch(error){
+            const errorMsg = error?.response?.data?.error || 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+        }
+})
 
 
 export const loginUser = createAsyncThunk(
@@ -74,7 +86,7 @@ const  UserSlice = createSlice({
             state.error = null;
         },
     },extraReducers:(builder)=>{
-         builder
+        builder
             .addCase(registerUser.fulfilled, (state, action) => {
                 const { id, name, email, phone } = action.payload;
                 state.user = id;
@@ -100,10 +112,18 @@ const  UserSlice = createSlice({
             })
 
             .addCase(forgetPassword.fulfilled,(state,action)=>{
+                state.error = null
 
             })
             .addCase(forgetPassword.rejected,(state,action )=>{
                 state.error= action.payload
+            })
+            .addCase(resetPassword.fulfilled,(state,action)=>{
+                state.error = null
+
+            })
+            .addCase(resetPassword.rejected,(state,action )=>{
+                state.error = action.payload
             })
         }
 })

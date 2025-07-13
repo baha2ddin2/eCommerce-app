@@ -1,9 +1,11 @@
-import { useRef, useState  } from 'react';
+import { useRef, useState ,useNavigate } from 'react';
 import {Button,FormControl,InputLabel,OutlinedInput,InputAdornment,Card,CardContent,Alert,IconButton,Box} from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
+
+import {useDispatch ,useSelector} from 'react-redux'
+import  {resetPassword} from '../slices/user'
 
 export default function ResetPassword() {
     const [showPassword, setShowPassword] = useState(false);
@@ -11,12 +13,16 @@ export default function ResetPassword() {
     const refPassword = useRef()
     const refCheckPassword = useRef()
 
+    const navigate = useNavigate();
+    const reduxError = useSelector(state => state.user.error);
+    const dispatch = useDispatch();
+
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleClickShowcheckPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) =>event.preventDefault();
     const handleMouseDowncheckPassword = (event) =>event.preventDefault();
     const [err,setErr] = useState([])
-    const handelsignin = (event)=>{
+    const handelsignin = async(event)=>{
 
         event.preventDefault()
         const password = refPassword.current.value
@@ -38,23 +44,23 @@ export default function ResetPassword() {
 
             return null;
         }
-
-        setErr(validateInputs({password,checkPassword}))
-
-        if(!err){
-            axios(`http://localhost:3001/api/password/reset-password/${user}/${token}`, {
-                password:password,
-            })
-            .then(function (response) {
-                localStorage.setItem('token',response.data.token)
-                setErr(null)
+        const validationError = validateInputs({ password, checkPassword});
+        if (validationError) {
+            setErr(validationError);
+            return;
+        }
+        try {
+            const response = await dispatch(resetPassword({user,token,password}))
+            if (resetPassword.fulfilled.match(response)){
                 refCheckPassword.current.value = ""
-            })
-            .catch(function (error) {
-              const errorMsg = error?.response?.data?.error || 'Something went wrong. Please try again.';
-              setErr(errorMsg)
-            })
-
+                refPassword.current.value = ""
+                setErr(null)
+                navigate('/')
+            }else{
+                setErr(response.payload || "Something went wrong.Please try again.");
+            }
+        } catch (error) {
+            setErr("Unexpected error");
         }
     }
     return (
@@ -69,7 +75,7 @@ export default function ResetPassword() {
             <Card sx={{ width: 362, p: 2, boxShadow: 4 }} >
                 <CardContent>
                     <h2 style={{ marginBottom: 8,textAlign:'center' }}>change your password</h2>
-                    { err ? <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '95%' }} severity="error">{err}</Alert> :""}
+                    { err||reduxError ? <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '95%' }} severity="error">{err||reduxError}</Alert> :""}
                     {/* Password Field */}
                     <FormControl sx={{ mb: 2 }} fullWidth variant="outlined">
                         <InputLabel size="small" htmlFor="outlined-adornment-password">

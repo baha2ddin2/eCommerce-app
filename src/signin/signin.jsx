@@ -4,7 +4,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../slices/userSlice';
+import { registerUser } from '../slices/user';
 
 
 export default function SignIn() {
@@ -79,18 +79,17 @@ export default function SignIn() {
         try {
             const result = await dispatch(registerUser({ user, name, email, password, phone }));
             if (registerUser.fulfilled.match(result)) {
-            // Success
-            setErr(null);
-            refUser.current.value = "";
-            refName.current.value = "";
-            refEmail.current.value = "";
-            refPassword.current.value = "";
-            refCheckPassword.current.value = "";
-            refPhone.current.value = "";
-            navigate("/home"); // or wherever
+                // Success
+                setErr(null);
+                refUser.current.value = "";
+                refName.current.value = "";
+                refEmail.current.value = "";
+                refPassword.current.value = "";
+                refCheckPassword.current.value = "";
+                refPhone.current.value = "";
+                navigate("/home");
             } else {
-            // Error from API
-            setErr(result.payload || "Something went wrong");
+                setErr(result.payload || "Something went wrong");
             }
         } catch (err) {
             setErr("Unexpected error");
