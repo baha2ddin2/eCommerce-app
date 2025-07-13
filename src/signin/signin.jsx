@@ -1,11 +1,17 @@
-import { useRef, useState ,  } from 'react';
+import { useRef, useState , useNavigate  } from 'react';
 import {Button,FormControl,InputLabel,OutlinedInput,TextField,InputAdornment,Card,CardContent,Alert,IconButton,Box} from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '../store/userSlice';
+
 
 export default function SignIn() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const reduxError = useSelector(state => state.user.error);
+
     const [showPassword, setShowPassword] = useState(false);
     const refUser=useRef()
     const refName = useRef()
@@ -19,7 +25,7 @@ export default function SignIn() {
     const handleMouseDownPassword = (event) =>event.preventDefault();
     const handleMouseDowncheckPassword = (event) =>event.preventDefault();
     const [err,setErr] = useState([])
-    const handelsignin = (event)=>{
+    const handelsignin = async (event)=>{
         event.preventDefault()
         const user = refUser.current.value
         const name= refName.current.value
@@ -64,33 +70,32 @@ export default function SignIn() {
             return null;
         }
 
-        setErr(validateInputs({user,name,email,password,checkPassword,phone}))
-
-        if(!err){
-            axios.post('http://localhost:3001/api/users', {
-            user:user,
-            name: name,
-            email:email,
-            password:password,
-            phone: phone,
-            })
-            .then(function (response) {
-                localStorage.setItem('token',response.data.token)
-                setErr(null)
-                refName.current.value = ""
-                refUser.current.value = ""
-                refEmail.current.value = ""
-                refPassword.current.value = ""
-                refCheckPassword.current.value = ""
-                refPhone.current.value = ""
-            })
-            .catch(function (error) {
-              const errorMsg = error?.response?.data?.error || 'Something went wrong. Please try again.';
-              setErr(errorMsg)
-            })
-
+         const validationError = validateInputs({ user, name, email, password, checkPassword, phone });
+        if (validationError) {
+            setErr(validationError);
+            return;
         }
-    }
+
+        try {
+            const result = await dispatch(registerUser({ user, name, email, password, phone }));
+            if (registerUser.fulfilled.match(result)) {
+            // Success
+            setErr(null);
+            refUser.current.value = "";
+            refName.current.value = "";
+            refEmail.current.value = "";
+            refPassword.current.value = "";
+            refCheckPassword.current.value = "";
+            refPhone.current.value = "";
+            navigate("/home"); // or wherever
+            } else {
+            // Error from API
+            setErr(result.payload || "Something went wrong");
+            }
+        } catch (err) {
+            setErr("Unexpected error");
+        }
+    };
     return (
         <>
         <Box
@@ -103,7 +108,7 @@ export default function SignIn() {
             <Card sx={{ width: 362, p: 2, boxShadow: 4 }} >
                 <CardContent>
                     <h2 style={{ marginBottom: 8,textAlign:'center' }}>sign in</h2>
-                    {err ? <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '95%' }} severity="error">{err}</Alert> :""}
+                    {err||reduxError ? <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '95%' }} severity="error">{err||reduxError}</Alert> :""}
                     <TextField
                         label="User Name"
                         type="text"
