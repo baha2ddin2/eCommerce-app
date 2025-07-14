@@ -54,7 +54,8 @@ export const loginUser = createAsyncThunk(
             }, {
                 withCredentials: true
             })
-        return response.data
+            console.log("redux :" + response)
+        return response
 
     } catch (error) {
         const errorMsg =  error?.response?.data?.error || error?.message || 'Something went wrong. Please try again.';
@@ -91,9 +92,9 @@ export const profileuser = createAsyncThunk(
     async({user},thunkAPI)=>{
         try{
             const userinfo = await axios.get(`http://localhost:3001/api/users/${user}`, {
-                    withCredentials: true, // ⬅️ THIS IS CRITICAL
+                    withCredentials: true,
             })
-            return userinfo.data
+            return userinfo
         }catch(error){
             const errorMsg =  error?.response?.data?.error || error?.message || 'Something went wrong. Please try again.';
             return thunkAPI.rejectWithValue(errorMsg)
@@ -106,32 +107,23 @@ export const profileuser = createAsyncThunk(
 const  UserSlice = createSlice({
     name :"user",
     initialState : {
-        user : null,
-        name : "",
-        email : "",
-        phone : "",
+        data :null,
         error: null
     },
     reducers :{
         logout: (state) => {
-            state.user = null;
-            state.name = "";
-            state.email = "";
-            state.phone = "";
+            state.data = null
             state.error = null;
             localStorage.removeItem("username")
         },
     },extraReducers:(builder)=>{
         builder
             .addCase(registerUser.fulfilled, (state, action) => {
-                const { user , name, email, phone } = action.payload;
-                state.user = user;
-                state.name = name;
-                state.email = email;
-                state.phone = phone;
+                const { data } = action.payload;
+                state.data = data;
                 state.error = null;
                 const secretKey = process.env.REACT_APP_SECRET_KEY
-                const encryptedName = CryptoJS.AES.encrypt(user, secretKey).toString();
+                const encryptedName = CryptoJS.AES.encrypt(data.user, secretKey).toString();
                 localStorage.setItem("username", encryptedName)
 
             })
@@ -139,11 +131,8 @@ const  UserSlice = createSlice({
                 state.error = action.payload;
             })
             .addCase(loginUser.fulfilled, (state, action) => {
-                const { info } = action.payload;
-                state.user = info.user;
-                state.name = info.name;
-                state.email = info.email;
-                state.phone = info.phone;
+                const info  = action.payload.data.info
+                state.data = info;
                 state.error = null;
                 const secretKey = process.env.REACT_APP_SECRET_KEY
                 const encryptedName = CryptoJS.AES.encrypt(info.user, secretKey).toString();
@@ -175,13 +164,11 @@ const  UserSlice = createSlice({
                 state.error = action.payload
             })
             .addCase(profileuser.fulfilled,(state,action)=>{
-                const { user , name ,email, phone } = action.payload;
+                const data  = action.payload.data
                 state.error = null
-                state.user = user;
-                state.name = name;
-                state.email = email;
-                state.phone = phone;
+                state.data  = data
                 state.error = null;
+                console.log(data)
 
             })
             .addCase(profileuser.rejected,(state,action )=>{

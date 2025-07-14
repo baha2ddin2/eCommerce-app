@@ -9,17 +9,14 @@ export default function Cart (){
     const {user} = useParams()
     const dispatch = useDispatch()
     const landing = useSelector((state)=>state.cart.loading)
+    const cartdata = useSelector((state)=>state.cart.cart)
+    const error = useSelector((state)=>state.cart.error)
+
     const [cart,setCart]=useState([])
     useEffect(()=>{
         dispatch(userCart({user}))
-        .unwrap()
-        .then((data) => {
-            setCart(data.data);
-        })
-        .catch((error) => {
-        console.error("Error loading cart:", error);
-        })
-    },[user,dispatch])
+        setCart(cartdata)
+    },[user,dispatch,cartdata])
 
     const handleDelete = (id) => {
     setCart(cart.filter((item) => item.cart_id !== id));
@@ -56,9 +53,8 @@ export default function Cart (){
       })
     );
   };
-  if (landing ===true) {
-    return <CartSkeleton />;
-  }
+  if (landing) return <CartSkeleton />
+  if (error) return error
 
     return(
         <>

@@ -26,7 +26,7 @@ const  cartSlice = createSlice({
     },extraReducers:(builder)=>{
         builder
             .addCase(userCart.fulfilled, (state, action) => {
-                const cart = action.payload;
+                const cart = action.payload.data;
                 state.cart = cart
                 state.error = null
                 state.loading = false

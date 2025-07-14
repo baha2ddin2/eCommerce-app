@@ -1,4 +1,3 @@
-import axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams , useNavigate } from "react-router-dom"
 
@@ -10,27 +9,32 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
-import { useDispatch  } from "react-redux";
+import { useDispatch, useSelector  } from "react-redux";
 import { logoutUser, profileuser } from "../../slices/user";
 
 
 export  function Profil(){
+  useEffect(() => {
+    console.log("✅ useEffect IS RUNNING");
+  }, []);
+
+  console.log("🚀 Profil component mounted");
+
     const {user}= useParams()
-    const [userData, setUserData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
     const navigate = useNavigate()
+    const userData = useSelector((state)=>state.user.data)
+    const errorRedux = useSelector((state)=>state.user.error)
 
     const dispatch = useDispatch()
+    console.log(user)
     useEffect(()=>{
-        dispatch(profileuser({user})).then((res) => {
-        setUserData(res.payload); // most likely it's in payload
-        console.log(res)
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Failed to load user profile", err);
-        setLoading(false)
-    })}, [user,dispatch] )
+      if (user){
+        console.log("user"+user)
+        dispatch(profileuser({user}))
+      }
+        
+    },[user,dispatch] )
     const [open, setOpen] = useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -47,9 +51,10 @@ export  function Profil(){
     const handleClose = ()=>{
       setOpen(false);
     }
-
+    if(errorRedux) return JSON.stringify(errorRedux)
     if (!user) return <Typography variant="h6" color="error">User not found</Typography>;
-    if (loading) return <CircularProgress style={{ margin: 100 }} />;
+    if (!userData) return <CircularProgress style={{ margin: 100 }} />;
+    console.log(userData)
     return(
         <>
             <Card style={{ maxWidth: 500, margin: '50px auto', padding: 20 }}>
