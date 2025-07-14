@@ -1,5 +1,6 @@
 import { createSlice , createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import CryptoJS from "crypto-js";
 
 export const forgetPassword = createAsyncThunk(
     "user/forgetPassword",
@@ -17,8 +18,8 @@ export const forgetPassword = createAsyncThunk(
 export const logoutUser = createAsyncThunk(
     "user/logoutUser",async (thunkAPI)=>{
         try {
-            const response =  await axios.post('http://localhost:3001/login', {
-                withCredentials: true  // this is required for cookies!
+            const response =  await axios.post('http://localhost:3001/login/logout',{}, {
+                withCredentials: true
             })
             return response
         } catch (error) {
@@ -32,7 +33,7 @@ export const logoutUser = createAsyncThunk(
 export const resetPassword =createAsyncThunk(
     "user/resetPassword",async({user,token,password},thunkAPI)=>{
         try{
-            const response = await axios(`http://localhost:3001/api/password/reset-password/${user}/${token}`, {
+            const response = await axios.post(`http://localhost:3001/api/password/reset-password/${user}/${token}`, {
                     password:password,
                 })
             return response
@@ -85,6 +86,22 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+export const profileuser = createAsyncThunk(
+    "user/profileInfo",
+    async({user},thunkAPI)=>{
+        try{
+            const userinfo = await axios.get(`http://localhost:3001/api/users/${user}`, {
+                    withCredentials: true, // ⬅️ THIS IS CRITICAL
+            })
+            return userinfo.data
+        }catch(error){
+            const errorMsg =  error?.response?.data?.error || error?.message || 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+
+        }
+    }
+)
+
 
 const  UserSlice = createSlice({
     name :"user",
@@ -102,28 +119,35 @@ const  UserSlice = createSlice({
             state.email = "";
             state.phone = "";
             state.error = null;
+            localStorage.removeItem("username")
         },
     },extraReducers:(builder)=>{
         builder
             .addCase(registerUser.fulfilled, (state, action) => {
-                const { id, name, email, phone } = action.payload;
-                state.user = id;
+                const { user , name, email, phone } = action.payload;
+                state.user = user;
                 state.name = name;
                 state.email = email;
                 state.phone = phone;
+                state.error = null;
+                const secretKey = process.env.REACT_APP_SECRET_KEY
+                const encryptedName = CryptoJS.AES.encrypt(user, secretKey).toString();
+                localStorage.setItem("username", encryptedName)
 
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.error = action.payload;
             })
-
             .addCase(loginUser.fulfilled, (state, action) => {
                 const { info } = action.payload;
-                state.user = info.id;
+                state.user = info.user;
                 state.name = info.name;
                 state.email = info.email;
                 state.phone = info.phone;
                 state.error = null;
+                const secretKey = process.env.REACT_APP_SECRET_KEY
+                const encryptedName = CryptoJS.AES.encrypt(info.user, secretKey).toString();
+                localStorage.setItem("username", encryptedName)
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.error = action.payload;
@@ -147,7 +171,20 @@ const  UserSlice = createSlice({
                 state.error = null
 
             })
-            .addCase(logout.rejected,(state,action )=>{
+            .addCase(logoutUser.rejected,(state,action )=>{
+                state.error = action.payload
+            })
+            .addCase(profileuser.fulfilled,(state,action)=>{
+                const { user , name ,email, phone } = action.payload;
+                state.error = null
+                state.user = user;
+                state.name = name;
+                state.email = email;
+                state.phone = phone;
+                state.error = null;
+
+            })
+            .addCase(profileuser.rejected,(state,action )=>{
                 state.error = action.payload
             })
         }

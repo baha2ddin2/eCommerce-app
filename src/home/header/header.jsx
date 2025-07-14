@@ -4,20 +4,18 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Search from "./search/search";
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
 
 export default function CustomHeader() {
   const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
+    useEffect(() => {
+     const encrypted = localStorage.getItem("username");
+      if (encrypted) {
+        const bytes = CryptoJS.AES.decrypt(encrypted, process.env.REACT_APP_SECRET_KEY);
+        const decryptedName = bytes.toString(CryptoJS.enc.Utf8);
+        setUser(decryptedName)
       }
-    } catch (err) {
-      console.error("Failed to parse user from localStorage:", err);
-    }
-  }, []);
+    }, []);
 
   return (
     <nav
@@ -48,10 +46,10 @@ export default function CustomHeader() {
       <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
         {user ? (
           <>
-            <Link component={RouterLink} to={`profil/${user.user}`} underline="none">
+            <Link component={RouterLink} to={`profil/${user}`} underline="none">
               <FaceIcon />
             </Link>
-            <Link component={RouterLink} to={`cart/${user.user}`} underline="none">
+            <Link component={RouterLink} to={`cart/${user}`} underline="none">
               <ShoppingCartIcon />
             </Link>
           </>

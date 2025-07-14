@@ -11,7 +11,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
 import { useDispatch  } from "react-redux";
-import { logoutUser } from "../../slices/user";
+import { logoutUser, profileuser } from "../../slices/user";
 
 
 export  function Profil(){
@@ -19,19 +19,18 @@ export  function Profil(){
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate()
+
     const dispatch = useDispatch()
     useEffect(()=>{
-        axios.get(`http://localhost:3001/api/users/${user}`)
-        .then((response)=>{
-            setUserData(response.data)
-            setLoading(false)
-            console.log(response)
-        }).catch((error) => {
-            console.error("Axios error:", error);
-            setLoading(false)
-        });
-
-    }, [user] )
+        dispatch(profileuser({user})).then((res) => {
+        setUserData(res.payload); // most likely it's in payload
+        console.log(res)
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to load user profile", err);
+        setLoading(false)
+    })}, [user,dispatch] )
     const [open, setOpen] = useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -40,7 +39,7 @@ export  function Profil(){
     };
 
     const handlelogout = () => {
-      dispatch(logoutUser)
+      dispatch(logoutUser())
       navigate("/")
       setOpen(false);
     };
