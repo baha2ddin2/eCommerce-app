@@ -2,6 +2,7 @@ import { createSlice , createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 
+
 export const forgetPassword = createAsyncThunk(
     "user/forgetPassword",
     async ({email},thunkAPI)=>{
@@ -116,6 +117,12 @@ const  UserSlice = createSlice({
             state.error = null;
             localStorage.removeItem("username")
         },
+        checkcookie:()=>{
+            const cookie = document.cookie
+                .split('; ')
+                .find(row => row.startsWith(`token=`));
+            return cookie ? cookie.split('=')[1] : null;
+        }
     },extraReducers:(builder)=>{
         builder
             .addCase(registerUser.fulfilled, (state, action) => {
@@ -177,6 +184,6 @@ const  UserSlice = createSlice({
         }
 })
 
-export const {logout} = UserSlice.actions
+export const {logout,checkcookie} = UserSlice.actions
 
 export default UserSlice.reducer

@@ -10,7 +10,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
 import { useDispatch, useSelector  } from "react-redux";
-import { logoutUser, profileuser } from "../../slices/user";
+import { logoutUser, profileuser , logout } from "../../slices/user";
 
 
 export  function Profil(){
@@ -33,7 +33,6 @@ export  function Profil(){
         console.log("user"+user)
         dispatch(profileuser({user}))
       }
-        
     },[user,dispatch] )
     const [open, setOpen] = useState(false);
     const theme = useTheme();
@@ -44,6 +43,7 @@ export  function Profil(){
 
     const handlelogout = () => {
       dispatch(logoutUser())
+      dispatch(logout())
       navigate("/")
       setOpen(false);
     };

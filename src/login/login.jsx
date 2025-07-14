@@ -8,7 +8,8 @@ import {AppProvider} from '@toolpad/core/AppProvider';
 import { SignInPage } from '@toolpad/core/SignInPage';
 import { useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from '../slices/user';
+import { loginUser, checkcookie } from '../slices/user';
+import {  } from '../slices/user';
 
 
 const providers = [{id: 'credentials', name: 'Email and Password'}];
@@ -144,6 +145,11 @@ export default function Login() {
   const reduxError = useSelector((state) => state.user.error);
   const navigate = useNavigate()
   const theme = useTheme();
+  const cookie = dispatch(checkcookie())
+  if(cookie){
+    navigate("/home")
+  }
+
   return (
     <AppProvider theme={theme}>
       <SignInPage
