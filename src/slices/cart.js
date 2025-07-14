@@ -15,11 +15,12 @@ export const userCart = createAsyncThunk(
         }
 })
 
-const  UserSlice = createSlice({
-    name :"user",
+const  cartSlice = createSlice({
+    name :"cart",
     initialState : {
         cart :[],
-        error:null
+        error:null,
+        loading:true
     },
     reducers :{
     },extraReducers:(builder)=>{
@@ -28,14 +29,18 @@ const  UserSlice = createSlice({
                 const cart = action.payload;
                 state.cart = cart
                 state.error = null
+                state.loading = false
+            }).addCase(userCart.pending,(state,action)=>{
+                state.loanding =true
             })
             .addCase(userCart.rejected, (state, action) => {
                 state.error = action.payload;
+                state.loanding = false
             })
 
         }
 })
 
-export const {logout} = UserSlice.actions
+// export const {} = cartSlice.actions
 
-export default UserSlice.reducer
+export default cartSlice.reducer

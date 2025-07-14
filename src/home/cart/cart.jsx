@@ -1,5 +1,5 @@
 
-import { useDispatch } from "react-redux"
+import { useDispatch ,useSelector } from "react-redux"
 import { userCart } from "../../slices/cart"
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
@@ -8,7 +8,7 @@ import CartSkeleton from "./cartSkeleton"
 export default function Cart (){
     const {user} = useParams()
     const dispatch = useDispatch()
-    // const cartData = useSelector((state)=>state.cart.cart)
+    const landing = useSelector((state)=>state.cart.loading)
     const [cart,setCart]=useState([])
     useEffect(()=>{
         dispatch(userCart({user}))
@@ -56,7 +56,7 @@ export default function Cart (){
       })
     );
   };
-  if (cart === null) {
+  if (landing ===true) {
     return <CartSkeleton />;
   }
 
