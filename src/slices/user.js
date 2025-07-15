@@ -185,8 +185,6 @@ const  UserSlice = createSlice({
                 state.error = null
                 state.data  = data
                 state.error = null;
-                console.log(data)
-
             })
             .addCase(profileuser.rejected,(state,action )=>{
                 state.error = action.payload
