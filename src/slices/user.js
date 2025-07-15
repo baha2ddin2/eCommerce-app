@@ -16,6 +16,22 @@ export const forgetPassword = createAsyncThunk(
             return thunkAPI.rejectWithValue(errorMsg)
         }
 })
+
+export const checkAuth = createAsyncThunk(
+    "user/checkAuth",
+    async (_,thunkAPI)=>{
+        try{
+            const response = await axios.get("http://localhost:3001/login/check-auth",{
+                withCredentials: true
+            })
+            return response
+        }catch(err){
+            return thunkAPI.rejectWithValue(err)
+        }
+    }
+)
+
+
 export const logoutUser = createAsyncThunk(
     "user/logoutUser",async (thunkAPI)=>{
         try {
@@ -109,19 +125,13 @@ const  UserSlice = createSlice({
     name :"user",
     initialState : {
         data :null,
-        error: null
+        error: null,
     },
     reducers :{
         logout: (state) => {
             state.data = null
             state.error = null;
             localStorage.removeItem("username")
-        },
-        checkcookie:()=>{
-            const cookie = document.cookie
-                .split('; ')
-                .find(row => row.startsWith(`token=`));
-            return cookie ? cookie.split('=')[1] : null;
         }
     },extraReducers:(builder)=>{
         builder
@@ -180,6 +190,12 @@ const  UserSlice = createSlice({
             })
             .addCase(profileuser.rejected,(state,action )=>{
                 state.error = action.payload
+            })
+            .addCase(checkAuth.fulfilled,(state,action)=>{
+                state = null
+            })
+            .addCase(checkAuth.rejected,(state,action )=>{
+                state.error= action.payload
             })
         }
 })

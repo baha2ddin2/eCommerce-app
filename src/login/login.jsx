@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState,useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import {Button,FormControl,Checkbox,FormControlLabel,InputLabel,OutlinedInput,TextField,InputAdornment,Link,Alert,IconButton,} from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -8,7 +8,7 @@ import {AppProvider} from '@toolpad/core/AppProvider';
 import { SignInPage } from '@toolpad/core/SignInPage';
 import { useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, checkcookie } from '../slices/user';
+import { loginUser, checkAuth } from '../slices/user';
 import {  } from '../slices/user';
 
 
@@ -47,6 +47,7 @@ function CustomPasswordField() {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+  
 
   return (
     <FormControl sx={{ my: 2 }} fullWidth variant="outlined">
@@ -145,10 +146,16 @@ export default function Login() {
   const reduxError = useSelector((state) => state.user.error);
   const navigate = useNavigate()
   const theme = useTheme();
-  const cookie = dispatch(checkcookie())
-  if(cookie){
-    navigate("/home")
+  const checkForLogin = async()=>{
+    const result = await dispatch(checkAuth());
+    if (checkAuth.fulfilled.match(result)) {
+      navigate("/home");
+    }
   }
+
+  useEffect(() => {
+    checkForLogin()
+  }, []);
 
   return (
     <AppProvider theme={theme}>
@@ -171,7 +178,7 @@ export default function Login() {
             return(
           reduxError &&(
             <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '100%' }} severity="error">
-              {reduxError}
+              {reduxError?.message}
             </Alert>
           ))},
           emailField: CustomEmailField,
