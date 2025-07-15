@@ -62,7 +62,7 @@ export default function FullPageProductView({ item }) {
             }}
           >
             <img
-              src={`http://localhost:3001/uploads/${image_url}`}
+              src={`/${image_url}`}
               alt={name}
               style={{
                 width: "100%",
