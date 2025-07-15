@@ -4,6 +4,7 @@ import { useDispatch , useSelector } from "react-redux"
 import { productItem, review } from "../../slices/product"
 import FullPageProductView from "./itemUI"
 import ReviewList from "./reviews"
+import AddReviewForm from "./AddReviewForm"
 
 export default function Item(){
     const dispatch = useDispatch()
@@ -25,10 +26,15 @@ export default function Item(){
        reviews = [reviews];
     }
     if (error) return <h1>{error}</h1>
+
+    const refreshReviews = () => {
+    dispatch(review({ id }));
+    };
     return(
         <>
             <FullPageProductView item={itemData} />
             <ReviewList  reviews={reviews}/>
+            <AddReviewForm productId={id} onSuccess={refreshReviews} />
         </>
     )
 }
