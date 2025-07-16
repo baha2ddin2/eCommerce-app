@@ -1,6 +1,7 @@
 import { createSlice , createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+
 export const newQuantity = createAsyncThunk(
     "cart/increase",
     async ({id , quantity},thunkAPI)=>{
@@ -12,7 +13,7 @@ export const newQuantity = createAsyncThunk(
         })
             return response.data
         }catch(error){
-            const errorMsg = error.response.message|| 'Something went wrong. Please try again.';
+            const errorMsg = error.response.data.error|| 'Something went wrong. Please try again.';
             return thunkAPI.rejectWithValue(errorMsg)
         }
 })
@@ -25,7 +26,24 @@ export const deleteCart = createAsyncThunk(
         })
             return response.data
         }catch(error){
-            const errorMsg = error.response.message|| 'Something went wrong. Please try again.';
+            const errorMsg = error.response.data.error|| 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+        }
+})
+export const  addcart= createAsyncThunk(
+    "cart/addCart",
+    async ({productid , quantity ,user},thunkAPI)=>{
+        try {
+            const response = await axios.post(`http://localhost:3001/api/cart`,{
+                productId : productid,
+                user : user,
+                quantity : quantity
+            },{
+            withCredentials: true
+        })
+            return response.data
+        }catch(error){
+            const errorMsg = error?.response?.data?.error|| 'Something went wrong. Please try again.';
             return thunkAPI.rejectWithValue(errorMsg)
         }
 })
@@ -49,7 +67,8 @@ const  cartSlice = createSlice({
     initialState : {
         cart :[],
         error:null,
-        loading:true
+        loading:true,
+        errorCart :null,
     },
     reducers :{
     },extraReducers:(builder)=>{
@@ -93,6 +112,13 @@ const  cartSlice = createSlice({
                 const deletedCartId = action.payload.id
                 state.cart = state.cart.filter(item => String(item.cart_id) !== String(deletedCartId));
                 state.error = null;
+            })
+            .addCase(addcart.pending,(state,action)=>{
+                state.loading =true
+            })
+            .addCase(addcart.rejected, (state, action) => {
+                state.error = action.payload;
+                state.loading = false
             })
         }
 })

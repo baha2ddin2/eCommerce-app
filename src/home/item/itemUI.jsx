@@ -14,12 +14,13 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useState } from "react";
 
-export default function FullPageProductView({ item }) {
+export default function FullPageProductView({ item , addcart}) {
   const [quantity, setQuantity] = useState(1);
 
   if (!item) return null;
 
   const {
+    id ,
     name,
     mark,
     description,
@@ -43,9 +44,7 @@ export default function FullPageProductView({ item }) {
   };
 
   const handleAddToCart = () => {
-    // 👇 هنا يمكنك ربط الزر بـ Redux أو localStorage
-    console.log("Added to cart:", { id: item.id, quantity });
-    alert(`Added ${quantity} item(s) to cart!`);
+    addcart(quantity,id)
   };
 
   return (
