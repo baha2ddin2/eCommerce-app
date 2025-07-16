@@ -11,6 +11,7 @@ import {Profil} from './home/profile/profile'
 import ResetPassword from './resetPassword/resetPassword'
 import SuccessPage from './succes page/succesPage'
 import axios from 'axios'
+import ProductPage from './home/all products/allProducts'
 
 function App() {
   axios.defaults.headers.common['token'] = localStorage.getItem("token");
@@ -20,6 +21,7 @@ function App() {
         <Routes>
           <Route path="/home" element={<Home/>} >
               <Route path='item/:id' element={<Item/>}/>
+              <Route path='all-products' element={<ProductPage/>}/>
               <Route path='cart/:user' element={<Cart/>}/>
               <Route path='profil/:user' element={<Profil/>}/>
           </Route>

@@ -25,6 +25,18 @@ export const review = createAsyncThunk(
         }
 })
 
+export const Allproduct = createAsyncThunk(
+    "product/getAllProducts",
+    async (_,thunkAPI)=>{
+        try {
+            const response = await axios.get(`http://localhost:3001/api/products`)
+            return response.data
+        }catch(error){
+            const errorMsg = error.response.data || 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+        }
+})
+
 const  productSlice = createSlice({
     name :"product",
     initialState : {
@@ -55,6 +67,15 @@ const  productSlice = createSlice({
             })
             .addCase(review.rejected, (state, action) => {
                 state.errorReview = action.payload;
+            })
+            .addCase(Allproduct.fulfilled, (state, action) => {
+                const  data  = action.payload;
+                state.data = data;
+                state.error = null;
+
+            })
+            .addCase(Allproduct.rejected, (state, action) => {
+                state.errorItem = action.payload;
             })
         }
 })
