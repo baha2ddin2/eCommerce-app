@@ -192,9 +192,9 @@ const  UserSlice = createSlice({
             .addCase(checkAuth.fulfilled,(state,action)=>{
                 state = null
             })
-            .addCase(checkAuth.rejected,(state,action )=>{
-                state.error= action.payload
-            })
+            // .addCase(checkAuth.rejected,(state,action )=>{
+            //     state.error= action.payload
+            // })
         }
 })
 
