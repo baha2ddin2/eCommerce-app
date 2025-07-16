@@ -8,16 +8,28 @@ import {
   Box,
   Divider
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
+import { useState } from 'react';
+
 export default function CartList({ cartItems, onDelete, onIncrease, onDecrease }) {
+  const [open, setOpen] = useState(false);
+  const handleClose = ()=>{
+      setOpen(false);
+    }
   const total = cartItems.reduce(
     (sum, item) => sum + parseFloat(item.total_line_price),
     0
   );
-
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
@@ -70,9 +82,27 @@ export default function CartList({ cartItems, onDelete, onIncrease, onDecrease }
                 </Typography>
               </Box>
 
-              <IconButton color="error" onClick={() => onDelete(item.cart_id)}>
+              <IconButton color="error" onClick={() =>setOpen(true)}>
                 <DeleteIcon />
               </IconButton>
+              <Dialog
+            fullScreen={fullScreen}
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="responsive-dialog-title"
+              >
+              <DialogTitle id="responsive-dialog-title">
+                Are you sure you want to delete this item form your cart?
+              </DialogTitle>
+              <DialogActions>
+              <Button autoFocus onClick={handleClose}>Cancel</Button>
+              <Button onClick={() =>{
+                console.log(item.cart_id)
+                onDelete(item.cart_id)
+                setOpen(false)
+                }} color="error" autoFocus>Yes</Button>
+              </DialogActions>
+          </Dialog>
             </Card>
           ))}
 
@@ -85,6 +115,7 @@ export default function CartList({ cartItems, onDelete, onIncrease, onDecrease }
           <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
             Proceed to Checkout
           </Button>
+          
         </>
       )}
     </Container>

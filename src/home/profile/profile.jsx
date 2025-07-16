@@ -14,12 +14,6 @@ import { logoutUser, profileuser , logout } from "../../slices/user";
 
 
 export  function Profil(){
-  useEffect(() => {
-    console.log("✅ useEffect IS RUNNING");
-  }, []);
-
-  console.log("🚀 Profil component mounted");
-
     const {user}= useParams()
     // const [loading, setLoading] = useState(true);
     const navigate = useNavigate()

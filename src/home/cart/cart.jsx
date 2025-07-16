@@ -1,6 +1,6 @@
 
 import { useDispatch ,useSelector } from "react-redux"
-import { userCart } from "../../slices/cart"
+import { deleteCart, userCart } from "../../slices/cart"
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import CartList from "./cartlist"
@@ -18,8 +18,8 @@ export default function Cart (){
     },[user,dispatch])
 
     const handleDelete = (id) => {
-    cartdata.filter((item) => item.cart_id !== id)
-  };
+      dispatch(deleteCart({id}))
+    };
 
   const handleIncrease =  (id) => {
   const item = cartdata.find((item) => item.cart_id === id);
@@ -27,9 +27,7 @@ export default function Cart (){
     const newQty = item.quantity + 1;
     dispatch(newQuantity({ id, quantity: newQty }));
   };
-
   }
-
   const handleDecrease =  (id) => {
   const item = cartdata.find((item) => item.cart_id === id);
   if (item && item.quantity > 1) {
@@ -37,6 +35,7 @@ export default function Cart (){
     dispatch(newQuantity({ id, quantity: newQty }));
 
   }
+
 }
   if (landing) return <CartSkeleton />
   if (error) return error

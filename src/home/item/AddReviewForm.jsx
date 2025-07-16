@@ -23,7 +23,7 @@ export default function AddReviewForm({ productId, onSuccess }) {
     try {
       const res = await axios.post("http://localhost:3001/api/reviews", {
         product_id: productId,
-        user: "current_user", // ❗️غيّر هذا حسب المستخدم الحالي
+        user: "current_user",
         comment,
         rating,
       });

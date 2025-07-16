@@ -16,6 +16,19 @@ export const newQuantity = createAsyncThunk(
             return thunkAPI.rejectWithValue(errorMsg)
         }
 })
+export const deleteCart = createAsyncThunk(
+    "cart/deleteCart",
+    async ({id},thunkAPI)=>{
+        try {
+            const response = await axios.delete(`http://localhost:3001/api/cart/${id}`,{
+            withCredentials: true
+        })
+            return response.data
+        }catch(error){
+            const errorMsg = error.response.message|| 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+        }
+})
 
 export const userCart = createAsyncThunk(
     "cart/userCart",
@@ -76,6 +89,10 @@ const  cartSlice = createSlice({
                 );
             }).addCase(newQuantity.rejected, (state, action) => {
                 state.error = action.payload;
+            }).addCase(deleteCart.fulfilled, (state, action) => {
+                const deletedCartId = action.payload.id
+                state.cart = state.cart.filter(item => String(item.cart_id) !== String(deletedCartId));
+                state.error = null;
             })
         }
 })
