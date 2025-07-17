@@ -16,7 +16,7 @@ export default function Item(){
     let reviews = useSelector(state=>state.product.dataReview)
     console.log(itemData)
     console.log(reviews)
-    const error = useSelector(state => state.product.errorItem || state.product.errorReview)
+    const error = useSelector(state => state.product.errorItem  || state.product.error)
     useEffect(()=>{
         dispatch(productItem({id}))
         dispatch(review({id}))
@@ -45,8 +45,8 @@ export default function Item(){
             return alert(" No user found. Please log in again.");
         }
         dispatch(addcart({
-            productid: id,
             quantity: quantity,
+            productid: id,
             user: decryptedName
         })).unwrap()
         .then(()=>{

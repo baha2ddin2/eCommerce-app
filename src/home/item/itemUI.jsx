@@ -44,7 +44,7 @@ export default function FullPageProductView({ item , addcart}) {
   };
 
   const handleAddToCart = () => {
-    addcart(quantity,id)
+    addcart(id ,quantity)
   };
 
   return (

@@ -66,7 +66,7 @@ const  productSlice = createSlice({
 
             })
             .addCase(review.rejected, (state, action) => {
-                state.errorReview = action.payload;
+                state.errorReview = action.payload.error;
             })
             .addCase(Allproduct.fulfilled, (state, action) => {
                 const  data  = action.payload;

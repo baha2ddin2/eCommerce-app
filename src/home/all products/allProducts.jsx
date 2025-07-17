@@ -19,68 +19,33 @@ import { Link as RouterLink } from 'react-router-dom';
 
 
 
-const productsData = [
-  {
-    id: 1,
-    name: "Wireless Mouse",
-    mark: "Logitech",
-    category: null,
-    description: "Ergonomic wireless mouse",
-    price: 25.99,
-    stock: 50,
-    image_url: "mouse.jpg",
-    rating: 4.5
-  },
-  {
-    id: 2,
-    name: "Keyboard",
-    mark: "Corsair",
-    category: null,
-    description: "Mechanical keyboard with RGB",
-    price: 45.5,
-    stock: 30,
-    image_url: "keyboard.jpg",
-    rating: 4.0
-  },
-  {
-    id: 3,
-    name: "USB-C Charger",
-    mark: "Anker",
-    category: null,
-    description: "Fast charging USB-C adapter",
-    price: 19.99,
-    stock: 0,
-    image_url: "charger.jpg",
-    rating: 3.5
-  }
-];
 
-export default function ProductsPage({products}) {
+export default function ProductsPage() {
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [rating, setRating] = useState(0);
   const [sort, setSort] = useState("");
+  const productData = useSelector((state)=>state.product.data)
+  const dispatch =useDispatch()
+  useEffect(()=>{
+    dispatch(Allproduct())
+  },[dispatch])
+
 
   const handlePriceChange = (_, newValue) => setPriceRange(newValue);
   const handleRatingChange = (_, newValue) => setRating(newValue);
   const handleSortChange = (e) => setSort(e.target.value);
 
-  const filteredProducts = productsData
+  const filteredProducts =  useSelector((state)=>state.product.data) ||[]
     .filter(
-      (product) => product.price >= priceRange[0] && product.price <= priceRange[1]
+      (product) => product.price >= priceRange[0] && Number(product.price) <= priceRange[1]
     )
-    .filter((product) => product.rating >= rating)
+    .filter((product) => product.average_rating>= rating)
     .sort((a, b) => {
       if (sort === "priceLow") return a.price - b.price;
       if (sort === "priceHigh") return b.price - a.price;
       if (sort === "rating") return b.rating - a.rating;
       return 0;
     });
-    const productData = useSelector((state)=>state.product.data)
-    const dispatch =useDispatch()
-  useEffect(()=>{
-    dispatch(Allproduct())
-  },[dispatch])
-      console.log(productData)
 
   return (
     <Box display="flex" p={2}>
@@ -133,7 +98,7 @@ export default function ProductsPage({products}) {
                 <Typography variant="body2">
                   Price: ${product.price}
                 </Typography>
-                <Rating value={product.rating} precision={0.5} readOnly />
+                <Rating value={product.average_rating} precision={0.5} readOnly />
                 <Typography variant="body2" color={product.stock === 0 ? "error" : "text.primary"}>
                   {product.stock === 0 ? "Sold Out" : `In Stock: ${product.stock}`}
                 </Typography>
