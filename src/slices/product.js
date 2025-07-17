@@ -36,6 +36,22 @@ export const Allproduct = createAsyncThunk(
             return thunkAPI.rejectWithValue(errorMsg)
         }
 })
+export const addReview = createAsyncThunk(
+    "product/addReview",
+    async ({productId, user, rating, comment},thunkAPI)=>{
+        try {
+            const response = await axios.post(`http://localhost:3001/api/reviews`,{
+                productId,
+                user,
+                rating,
+                comment
+            })
+            return response.data
+        }catch(error){
+            const errorMsg = error.response.data || 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+        }
+})
 
 const  productSlice = createSlice({
     name :"product",

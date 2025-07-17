@@ -6,36 +6,41 @@ import {
   Typography,
   Stack,
 } from "@mui/material";
-import { useState } from "react";
-import axios from "axios";
+import { useState,useEffect } from "react";
+import { useDispatch } from "react-redux";
+import CryptoJS from "crypto-js";
+import { addReview } from "../../slices/product";
 
 export default function AddReviewForm({ productId, onSuccess }) {
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const dispatch = useDispatch()
+  const [user, setUser] = useState(null);
+      useEffect(() => {
+       const encrypted = localStorage.getItem("username");
+        if (encrypted) {
+          const bytes = CryptoJS.AES.decrypt(encrypted, process.env.REACT_APP_SECRET_KEY);
+          const decryptedName = bytes.toString(CryptoJS.enc.Utf8);
+          setUser(decryptedName)
+        }
+      }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-
-    try {
-      const res = await axios.post("http://localhost:3001/api/reviews", {
-        product_id: productId,
-        user: "current_user",
-        comment,
-        rating,
-      });
-
-      onSuccess(); // تحديث قائمة المراجعات بعد الإرسال
+    dispatch(addReview({productId, user, rating, comment}))
+    .unwrap()
+    .then(()=>{
+      setLoading(false);
+      setError("");
       setComment("");
       setRating(0);
-    } catch (err) {
-      setError("Failed to submit review");
-    } finally {
+      onSuccess()
+    }).catch(()=>{
       setLoading(false);
-    }
+      setError("Failed to submit review");
+    })
   };
 
   return (
