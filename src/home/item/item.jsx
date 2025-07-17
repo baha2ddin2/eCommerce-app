@@ -85,7 +85,7 @@ export default function Item(){
                             severity="error"
                             sx={{
                               position: 'fixed',
-                              bottom: 60, // slightly above the success alert
+                              bottom: 60,
                               left: '50%',
                               transform: 'translateX(-50%)',
                               width: 'fit-content',
