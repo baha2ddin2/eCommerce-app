@@ -35,7 +35,7 @@ export default function ProductsPage() {
   const handleRatingChange = (_, newValue) => setRating(newValue);
   const handleSortChange = (e) => setSort(e.target.value);
 
-  const filteredProducts =  useSelector((state)=>state.product.data) ||[]
+  const filteredProducts =  useSelector((state)=>state.product.data ||[])
     .filter(
       (product) => product.price >= priceRange[0] && Number(product.price) <= priceRange[1]
     )
@@ -82,8 +82,8 @@ export default function ProductsPage() {
 
       <Grid container spacing={2}>
         {filteredProducts.map((product) => (
-        <Link component={RouterLink} underline="none" to={`/home/item/${product.id}`}>
-          <Grid item xs={12} sm={6} md={4} key={product.id}>
+        <Link component={RouterLink} key={product.id} underline="none" to={`/home/item/${product.id}`}>
+          <Grid item xs={12} sm={6} md={4} >
             <Card>
               <img
                 src={product.image_url}

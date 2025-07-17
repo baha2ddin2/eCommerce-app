@@ -13,6 +13,7 @@ import SuccessPage from './succes page/succesPage'
 import axios from 'axios'
 import ProductPage from './home/all products/allProducts'
 import HomePage from './home/homepage/homepage'
+import CategoryPage from './home/category/category'
 
 function App() {
   axios.defaults.headers.common['token'] = localStorage.getItem("token");
@@ -25,6 +26,7 @@ function App() {
               <Route path='all-products' element={<ProductPage/>}/>
               <Route path='cart/:user' element={<Cart/>}/>
               <Route path='profil/:user' element={<Profil/>}/>
+              <Route path='category/:category' element={<CategoryPage/>}/>
               <Route index element={<HomePage/>}/>
           </Route>
           <Route path="/" index element={<Login/>} />

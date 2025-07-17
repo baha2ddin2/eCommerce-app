@@ -62,9 +62,11 @@ export default function HomePage() {
           <Typography variant="h3" color="white" gutterBottom>
             Discover Our Best Products
           </Typography>
-          <Button variant="contained" color="secondary" size="large">
-            See All Products
-          </Button>
+          <Link component={RouterLink} underline="none" to={`all-products`}>
+            <Button variant="contained" color="secondary" size="large">
+              See All Products
+            </Button>
+          </Link>
         </Box>
       </Box>
 
@@ -82,9 +84,11 @@ export default function HomePage() {
             <Typography variant="h5">
               {categoryName.charAt(0).toUpperCase() + categoryName.slice(1)}
             </Typography>
-            <Button variant="outlined" size="small">
-              See All
-            </Button>
+            <Link component={RouterLink} underline="none" to={`category/${categoryName}`}>
+              <Button variant="outlined" size="small">
+                See All
+              </Button>
+            </Link>
           </Box>
           <Grid container spacing={2}>
             {products.slice(0, 5).map((product) => (
