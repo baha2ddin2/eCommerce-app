@@ -4,6 +4,7 @@ import { useDispatch , useSelector } from "react-redux"
 import { productItem, review } from "../../slices/product"
 import FullPageProductView from "./itemUI"
 import ReviewList from "./reviews"
+import Alert from '@mui/material/Alert';
 import AddReviewForm from "./AddReviewForm"
 import { addcart } from "../../slices/cart"
 import CryptoJS from "crypto-js";
@@ -21,7 +22,8 @@ export default function Item(){
         dispatch(review({id}))
     },[dispatch,id])
 
-    const [user ,setUser] = useState(null)
+    const [visibleAlert,setVisibleAlert]=useState(false)
+    const [errorAlert, setErrorAlert] = useState(false);
     if (!Array.isArray(reviews)) {
        reviews = [reviews];
     }
@@ -32,23 +34,31 @@ export default function Item(){
     };
 
     const handeladd = async (id , quantity)=>{
-       const encrypted = localStorage.getItem("username");
-    let decryptedName = null;
+        const encrypted = localStorage.getItem("username");
+        let decryptedName = null;
 
-    if (encrypted) {
-        const bytes = CryptoJS.AES.decrypt(encrypted, process.env.REACT_APP_SECRET_KEY);
-        decryptedName = bytes.toString(CryptoJS.enc.Utf8);
-    }
-
-    if (!decryptedName) {
-        return alert("🛑 No user found. Please log in again.");
-    }
-
-    dispatch(addcart({
-        productid: id,
-        quantity: quantity,
-        user: decryptedName
-    }));
+        if (encrypted) {
+            const bytes = CryptoJS.AES.decrypt(encrypted, process.env.REACT_APP_SECRET_KEY);
+            decryptedName = bytes.toString(CryptoJS.enc.Utf8);
+        }
+        if (!decryptedName) {
+            return alert(" No user found. Please log in again.");
+        }
+        dispatch(addcart({
+            productid: id,
+            quantity: quantity,
+            user: decryptedName
+        })).unwrap()
+        .then(()=>{
+        setVisibleAlert(true)
+        setTimeout(()=>{
+          setVisibleAlert(false)
+        },3000)
+      })
+      .catch(()=>{
+        setErrorAlert(true);
+        setTimeout(() => setErrorAlert(false), 3000);
+      })
     }
 
     return(
@@ -56,6 +66,36 @@ export default function Item(){
             <FullPageProductView item={itemData} addcart={handeladd} />
             <ReviewList  reviews={reviews}/>
             <AddReviewForm productId={id} onSuccess={refreshReviews} />
+            {visibleAlert &&(
+                            <Alert sx={{
+                              position: 'fixed',
+                              bottom: 16,
+                              left: '50%',
+                              transform: 'translateX(-50%)',
+                              width: 'fit-content',
+                              fontSize: '0.8rem',
+                              zIndex: 1300,
+                              }} severity="success">
+                              you add this items to your cart successfully
+                            </Alert>
+                          )
+                        }
+            {errorAlert && (
+                          <Alert
+                            severity="error"
+                            sx={{
+                              position: 'fixed',
+                              bottom: 60, // slightly above the success alert
+                              left: '50%',
+                              transform: 'translateX(-50%)',
+                              width: 'fit-content',
+                              fontSize: '0.8rem',
+                              zIndex: 1300,
+                            }}
+                          >
+                            Failed to add the item. check if is already in your cart
+                          </Alert>
+             )}
         </>
     )
 }

@@ -26,7 +26,7 @@ export const deleteCart = createAsyncThunk(
         })
             return response.data
         }catch(error){
-            const errorMsg = error.response.data.error|| 'Something went wrong. Please try again.';
+            const errorMsg = error?.response?.data?.error|| 'Something went wrong. Please try again.';
             return thunkAPI.rejectWithValue(errorMsg)
         }
 })
@@ -57,6 +57,9 @@ export const userCart = createAsyncThunk(
         })
             return response.data
         }catch(error){
+            if (error.response && error.response.status === 404) {
+                return [];
+            }
             const errorMsg = error.response.message|| 'Something went wrong. Please try again.';
             return thunkAPI.rejectWithValue(errorMsg)
         }
@@ -78,7 +81,8 @@ const  cartSlice = createSlice({
                 state.cart = cart
                 state.error = null
                 state.loading = false
-            }).addCase(userCart.pending,(state,action)=>{
+            })
+            .addCase(userCart.pending,(state,action)=>{
                 state.loading =true
             })
             .addCase(userCart.rejected, (state, action) => {
@@ -112,6 +116,13 @@ const  cartSlice = createSlice({
                 const deletedCartId = action.payload.id
                 state.cart = state.cart.filter(item => String(item.cart_id) !== String(deletedCartId));
                 state.error = null;
+                state.deleteAlert = true;
+            })
+            .addCase(addcart.fulfilled, (state, action) => {
+                const cart = action.payload;
+                state.cart = [cart,...state.cart]
+                state.error = null
+                state.loading = false
             })
             .addCase(addcart.pending,(state,action)=>{
                 state.loading =true
