@@ -13,32 +13,6 @@ import { useDispatch, useSelector  } from "react-redux";
 import { logoutUser, profileuser , logout } from "../../slices/user";
 import OrdersUI from "./orders";
 import { fullorder } from "../../slices/orders";
-// Assume your API response is stored in `response`
-const response =  [
-    {
-      status: "pending",
-      order_id: 2,
-      customer_name: "bahaeddin",
-      product_name: "Wireless Mouse",
-      quantity: 1,
-      price: "25.99",
-      total_price: "25.99",
-      adress: null,
-    },
-    {
-      status: "pending",
-      order_id: 2,
-      customer_name: "bahaeddin",
-      product_name: "Keyboard",
-      quantity: 1,
-      price: "45.50",
-      total_price: "45.50",
-      adress: null,
-    },
-  ]
-
-
-
 
 export  function Profil(){
     const {user}= useParams()
