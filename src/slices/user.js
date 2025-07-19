@@ -111,9 +111,9 @@ export const profileuser = createAsyncThunk(
             const userinfo = await axios.get(`http://localhost:3001/api/users/${user}`, {
                     withCredentials: true,
             })
-            return userinfo
+            return userinfo.data
         }catch(error){
-            const errorMsg =  error?.response?.data?.error || error?.message || 'Something went wrong. Please try again.';
+            const errorMsg =  error?.response?.data?.error || error?.message||error.response.error || 'Something went wrong. Please try again.';
             return thunkAPI.rejectWithValue(errorMsg)
 
         }
@@ -181,7 +181,7 @@ const  UserSlice = createSlice({
                 state.error = action.payload
             })
             .addCase(profileuser.fulfilled,(state,action)=>{
-                const data  = action.payload.data
+                const data  = action.payload
                 state.error = null
                 state.data  = data
                 state.error = null;

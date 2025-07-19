@@ -24,9 +24,8 @@ export default function ProductsPage() {
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [rating, setRating] = useState(0);
   const [sort, setSort] = useState("");
-  const productData = useSelector((state)=>state.product.data)
-  const dispatch =useDispatch()
-  useEffect(()=>{
+  const dispatch = useDispatch()
+  useEffect(() => {
     dispatch(Allproduct())
   },[dispatch])
 

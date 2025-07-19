@@ -11,6 +11,33 @@ import { useTheme } from '@mui/material/styles';
 
 import { useDispatch, useSelector  } from "react-redux";
 import { logoutUser, profileuser , logout } from "../../slices/user";
+import OrdersUI from "./orders";
+import { fullorder } from "../../slices/orders";
+// Assume your API response is stored in `response`
+const response =  [
+    {
+      status: "pending",
+      order_id: 2,
+      customer_name: "bahaeddin",
+      product_name: "Wireless Mouse",
+      quantity: 1,
+      price: "25.99",
+      total_price: "25.99",
+      adress: null,
+    },
+    {
+      status: "pending",
+      order_id: 2,
+      customer_name: "bahaeddin",
+      product_name: "Keyboard",
+      quantity: 1,
+      price: "45.50",
+      total_price: "45.50",
+      adress: null,
+    },
+  ]
+
+
 
 
 export  function Profil(){
@@ -19,13 +46,16 @@ export  function Profil(){
     const navigate = useNavigate()
     const userData = useSelector((state)=>state.user.data)
     const errorRedux = useSelector((state)=>state.user.error)
+    const orders = useSelector((state)=>state.order.orderUser)
 
     const dispatch = useDispatch()
     console.log(user)
+    console.log(orders)
     useEffect(()=>{
       if (user){
         console.log("user"+user)
         dispatch(profileuser({user}))
+        dispatch(fullorder({user}))
       }
     },[user,dispatch] )
     const [open, setOpen] = useState(false);
@@ -82,6 +112,7 @@ export  function Profil(){
                   </Button>
                 </DialogActions>
               </Dialog>
+              <OrdersUI payload={orders} />;
         </>
     )
 }
