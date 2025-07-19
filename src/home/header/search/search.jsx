@@ -1,27 +1,46 @@
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Autocomplete from '@mui/material/Autocomplete';
-const top100Films = [
-  { title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 },
-  { title: 'The Godfather: Part II', year: 1974 },
-  { title: 'The Dark Knight', year: 2008 },
-  { title: '12 Angry Men', year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: 'Pulp Fiction', year: 1994 }]
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { Allproduct } from '../../../slices/product';
+import { useNavigate } from 'react-router-dom';
 
 export default function Search() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const products = useSelector((state) => state.product.data) || [];
+  const [inputValue, setInputValue] = useState('');
+
+  useEffect(() => {
+    dispatch(Allproduct());
+  }, [dispatch]);
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      const found = products.find((p) => p.name.toLowerCase() === inputValue.toLowerCase());
+      if (found) {
+        navigate(`item/${found.id}`);
+      } else {
+        alert('Product not found');
+      }
+    }
+  };
+
   return (
     <Stack spacing={2} sx={{ width: 300 }}>
       <Autocomplete
         freeSolo
         id="free-solo-2-demo"
         disableClearable
-        options={top100Films.map((option) => option.title)}
+        options={products.map((option) => option.name)}
+        inputValue={inputValue}
+        onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
         renderInput={(params) => (
           <TextField
             {...params}
             label="Search"
+            onKeyDown={handleKeyDown}
             slotProps={{
               input: {
                 ...params.InputProps,
