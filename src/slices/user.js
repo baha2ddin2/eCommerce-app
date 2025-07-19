@@ -24,7 +24,7 @@ export const checkAuth = createAsyncThunk(
             const response = await axios.get("http://localhost:3001/login/check-auth",{
                 withCredentials: true
             })
-            return response
+            return response.data
         }catch(err){
             return thunkAPI.rejectWithValue(err)
         }
@@ -71,7 +71,6 @@ export const loginUser = createAsyncThunk(
             }, {
                 withCredentials: true
             })
-            console.log("redux :" + response)
         return response
 
     } catch (error) {
@@ -103,12 +102,50 @@ export const registerUser = createAsyncThunk(
     }
   }
 );
+export const changeUser = createAsyncThunk(
+    "user/changeUser",
+    async({name,email,phone,user},thunkAPI)=>{
+        phone = String(phone)
+        try{
+            const userinfo = await axios.put(`http://localhost:3001/api/users/${user}`,{
+                name,
+                email,
+                phone
+            }, {
+                withCredentials: true,
+            })
+            return userinfo.data
+        }catch(error){
+            const errorMsg =  error?.response?.data?.error || error?.message||error.response.error || 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+
+        }
+    }
+)
 
 export const profileuser = createAsyncThunk(
     "user/profileInfo",
     async({user},thunkAPI)=>{
         try{
             const userinfo = await axios.get(`http://localhost:3001/api/users/${user}`, {
+                    withCredentials: true,
+            })
+            return userinfo.data
+        }catch(error){
+            const errorMsg =  error?.response?.data?.error || error?.message||error.response.error || 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+
+        }
+    }
+)
+export const changePassword = createAsyncThunk(
+    "user/changepassword",
+    async({user,oldPassword,password},thunkAPI)=>{
+        try{
+            const userinfo = await axios.put(`http://localhost:3001/api/users/change-password/${user}`,{
+                oldPassword,
+                password
+            }, {
                     withCredentials: true,
             })
             return userinfo.data
@@ -190,7 +227,10 @@ const  UserSlice = createSlice({
                 state.error = action.payload
             })
             .addCase(checkAuth.fulfilled,(state,action)=>{
-                state = null
+                state.error = null
+            })
+            .addCase(changeUser.fulfilled,(state,action)=>{
+                
             })
             // .addCase(checkAuth.rejected,(state,action )=>{
             //     state.error= action.payload

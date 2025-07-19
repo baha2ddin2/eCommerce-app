@@ -5,17 +5,26 @@ import Search from "./search/search";
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
+import CategoryHeader from './category/headerCategory';
+import { useDispatch } from 'react-redux';
+import { checkAuth } from '../../slices/user';
 
 export default function CustomHeader() {
+  const dispatch = useDispatch()
+  const [checkAuthState , setCkeckAuthState ] =useState(true)
   const [user, setUser] = useState(null);
     useEffect(() => {
-     const encrypted = localStorage.getItem("username");
+      dispatch(checkAuth())
+      .unwrap()
+      .then(setCkeckAuthState(true))
+      .catch(setCkeckAuthState(false))
+      const encrypted = localStorage.getItem("username");
       if (encrypted) {
         const bytes = CryptoJS.AES.decrypt(encrypted, process.env.REACT_APP_SECRET_KEY);
         const decryptedName = bytes.toString(CryptoJS.enc.Utf8);
         setUser(decryptedName)
       }
-    }, []);
+    }, [dispatch]);
 
   return (
     <nav
@@ -38,13 +47,17 @@ export default function CustomHeader() {
           <h2 style={{ color: "black" }}>Home</h2>
         </Link>
       </div>
+      <div>
+        <CategoryHeader/>
+      </div>
 
       <div>
         <Search />
       </div>
 
+
       <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
-        {user ? (
+        {user || checkAuthState ? (
           <>
             <Link component={RouterLink} to={`profil/${user}`} underline="none">
               <FaceIcon />

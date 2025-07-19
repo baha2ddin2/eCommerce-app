@@ -1,44 +1,58 @@
 import { TextField, Button, Stack, Typography, Paper } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-// import { useSelector, useDispatch } from 'react-redux'; // Uncomment if using Redux
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { changeUser, profileuser } from '../../slices/user';
 
 export default function EditUserPage() {
+  const { user } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  // Replace these with real user data or Redux state
   const [formData, setFormData] = useState({
+    user: user,
     name: '',
     email: '',
     phone: '',
   });
 
   useEffect(() => {
-    // Load current user data here (from Redux, context, or API)
-    // Example:
-    // setFormData(currentUser)
-    setFormData({
-      name: 'John Doe',
-      email: 'john@example.com',
-      phone: '123456789',
-    });
-  }, []);
+    if (user) {
+      dispatch(profileuser({ user }))
+        .unwrap()
+        .then((data) => {
+          setFormData((prev) => ({
+            ...prev,
+            name: data.name || '',
+            email: data.email || '',
+            phone: data.phone || '',
+          }));
+        })
+        .catch((error) => console.error('Failed to fetch user:', error));
+    }
+  }, [dispatch, user]);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Send update to backend or dispatch Redux action
-    console.log('Submitting:', formData);
+    dispatch(changeUser(formData))
+      .unwrap()
+      .then(() => {
+        console.log('Submitting:', formData);
+        navigate(`/home/profil/${user}`);
+      })
+      .catch((err) => console.error("Update failed:", err));
   };
 
   const handleChangePassword = () => {
-    navigate('/change-password');
+    navigate(`/change-password/${user}`);
   };
 
   return (

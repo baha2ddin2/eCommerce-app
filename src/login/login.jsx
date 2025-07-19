@@ -155,7 +155,7 @@ export default function Login() {
 
   useEffect(() => {
     checkForLogin()
-  }, []);
+  });
 
   return (
     <AppProvider theme={theme}>

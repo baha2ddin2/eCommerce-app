@@ -14,6 +14,7 @@ import { useSelector , useDispatch } from "react-redux";
 import { Allproduct } from "../../slices/product";
 import { Link as RouterLink } from "react-router-dom";
 
+
 // Group products by category
 const groupByCategory = (products) => {
   const grouped = {};
@@ -38,7 +39,6 @@ export default function HomePage() {
 
   return (
     <Box>
-      {/* Hero Section */}
       <Box
         sx={{
           backgroundImage: `url('/banner.jpg')`,

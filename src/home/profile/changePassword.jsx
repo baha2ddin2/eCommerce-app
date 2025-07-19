@@ -7,14 +7,20 @@ import {
   Paper,
   Alert,
 } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { changePassword } from '../../slices/user';
+import { useParams ,useNavigate } from 'react-router-dom';
+
 
 export default function ChangePasswordPage() {
+  const navigate = useNavigate()
+  const {user} = useParams()
   const [formData, setFormData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
   });
-
+  const dispatch = useDispatch()
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -35,6 +41,14 @@ export default function ChangePasswordPage() {
       setError("New passwords don't match.");
       return;
     }
+    dispatch(changePassword({
+      user : user,
+      oldPassword : formData.currentPassword,
+      password : formData.newPassword
+    })).unwrap()
+    .then(()=>{
+      navigate(`/home/profil/${user}`)
+    })
 
     // Add real API call or Redux dispatch here
     console.log('Changing password...', formData);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { useParams , useNavigate } from "react-router-dom"
+import { useParams , useNavigate ,Link as LinkRoute } from "react-router-dom"
 
-import { Card, CardContent, Typography, CircularProgress } from '@mui/material';
+import { Card, CardContent, Typography, CircularProgress ,Box,IconButton ,Link } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -13,6 +13,7 @@ import { useDispatch, useSelector  } from "react-redux";
 import { logoutUser, profileuser , logout } from "../../slices/user";
 import OrdersUI from "./orders";
 import { fullorder } from "../../slices/orders";
+import EditSquareIcon from '@mui/icons-material/EditSquare';
 
 export  function Profil(){
     const {user}= useParams()
@@ -23,11 +24,8 @@ export  function Profil(){
     const orders = useSelector((state)=>state.order.orderUser)
 
     const dispatch = useDispatch()
-    console.log(user)
-    console.log(orders)
     useEffect(()=>{
       if (user){
-        console.log("user"+user)
         dispatch(profileuser({user}))
         dispatch(fullorder({user}))
       }
@@ -52,17 +50,24 @@ export  function Profil(){
     if(errorRedux) return JSON.stringify(errorRedux)
     if (!user) return <Typography variant="h6" color="error">User not found</Typography>;
     if (!userData) return <CircularProgress style={{ margin: 100 }} />;
-    console.log(userData)
     return(
         <>
             <Card style={{ maxWidth: 500, margin: '50px auto', padding: 20 }}>
                 <CardContent>
+                  <Box display="flex" justifyContent="space-between" alignItems="center">
                     <Typography variant="h5" gutterBottom>User Profile</Typography>
-                    <Typography><strong>USER:</strong> {user}</Typography>
-                    <Typography><strong>NAME:</strong> {userData.name}</Typography>
-                    <Typography><strong>EMAIL:</strong> {userData.email}</Typography>
-                    <Typography><strong>PHONE:</strong> {userData.phone}</Typography>
-                    <Typography><strong>JOINED :</strong> {new Date(userData.created_at).toLocaleDateString()}</Typography>
+                    <IconButton>
+                      <Link component={LinkRoute} to={`/home/edit-profile/${user}`}>
+                        <EditSquareIcon />
+                      </Link>
+                    </IconButton>
+                  </Box>
+
+                  <Typography><strong>USER:</strong> {user}</Typography>
+                  <Typography><strong>NAME:</strong> {userData.name}</Typography>
+                  <Typography><strong>EMAIL:</strong> {userData.email}</Typography>
+                  <Typography><strong>PHONE:</strong> {String(userData.phone)}</Typography>
+                  <Typography><strong>JOINED:</strong> {new Date(userData.created_at).toLocaleDateString()}</Typography>
                 </CardContent>
                 <Button variant="contained" color="error" onClick={handleClickOpen}>
                   logout
