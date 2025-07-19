@@ -50,7 +50,8 @@ export default function ForgotPassword() {
       <SignInPage
         signIn={async ( provider, formData) =>{
             try{
-              const email =formData.get("emaill")
+              const email =formData.get("email")
+              console.log(email)
               const result = await dispatch(forgetPassword({email}))
               if (forgetPassword.fulfilled.match(result)){
                 setErr(null)

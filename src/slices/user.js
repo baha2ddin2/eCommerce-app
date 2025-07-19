@@ -12,7 +12,7 @@ export const forgetPassword = createAsyncThunk(
             })
             return response
         }catch(error){
-            const errorMsg = error.response.data.det || 'Something went wrong. Please try again.';
+            const errorMsg = error.response.data.error || 'Something went wrong. Please try again.';
             return thunkAPI.rejectWithValue(errorMsg)
         }
 })
@@ -50,8 +50,8 @@ export const logoutUser = createAsyncThunk(
 export const resetPassword =createAsyncThunk(
     "user/resetPassword",async({user,token,password},thunkAPI)=>{
         try{
-            const response = await axios.post(`http://localhost:3001/api/password/reset-password/${user}/${token}`, {
-                    password:password,
+            const response = await axios.put(`http://localhost:3001/api/password/reset-password/${user}/${token}`, {
+                    password:password
                 })
             return response
         }catch(error){
@@ -228,9 +228,6 @@ const  UserSlice = createSlice({
             })
             .addCase(checkAuth.fulfilled,(state,action)=>{
                 state.error = null
-            })
-            .addCase(changeUser.fulfilled,(state,action)=>{
-                
             })
             // .addCase(checkAuth.rejected,(state,action )=>{
             //     state.error= action.payload

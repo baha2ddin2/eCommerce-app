@@ -1,8 +1,8 @@
-import { useRef, useState ,useNavigate } from 'react';
+import { useRef, useState  } from 'react';
 import {Button,FormControl,InputLabel,OutlinedInput,InputAdornment,Card,CardContent,Alert,IconButton,Box} from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import {useDispatch ,useSelector} from 'react-redux'
 import  {resetPassword} from '../slices/user'
