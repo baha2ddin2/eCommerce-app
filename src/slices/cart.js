@@ -78,6 +78,7 @@ const  cartSlice = createSlice({
         builder
             .addCase(userCart.fulfilled, (state, action) => {
                 const cart = action.payload;
+                localStorage.setItem('cart',JSON.stringify(cart))
                 state.cart = cart
                 state.error = null
                 state.loading = false

@@ -21,7 +21,7 @@ export default function ResetPassword() {
     const handleClickShowcheckPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) =>event.preventDefault();
     const handleMouseDowncheckPassword = (event) =>event.preventDefault();
-    const [err,setErr] = useState([])
+    const [err,setErr] = useState(null)
     const handelsignin = async(event)=>{
 
         event.preventDefault()

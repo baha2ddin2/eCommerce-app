@@ -178,7 +178,7 @@ export default function Login() {
             return(
           reduxError &&(
             <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '100%' }} severity="error">
-              {reduxError?.message}
+              {reduxError}
             </Alert>
           ))},
           emailField: CustomEmailField,

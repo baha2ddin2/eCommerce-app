@@ -1,6 +1,5 @@
 import {
   Card,
-  CardContent,
   Typography,
   IconButton,
   Container,
@@ -16,10 +15,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { useNavigate } from "react-router-dom";
 
 import { useState } from 'react';
 
-export default function CartList({ cartItems, onDelete, onIncrease, onDecrease }) {
+export default function CartList({ cartItems, onDelete, onIncrease, onDecrease,user }) {
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false);
   const handleClose = ()=>{
       setOpen(false);
@@ -30,6 +31,11 @@ export default function CartList({ cartItems, onDelete, onIncrease, onDecrease }
   );
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+     const handelOrder =()=>{
+      navigate(`/home/complet-order/${user}`)
+    }
+
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
@@ -111,11 +117,9 @@ export default function CartList({ cartItems, onDelete, onIncrease, onDecrease }
           <Typography variant="h6" align="right">
             Cart Total: ${total.toFixed(2)}
           </Typography>
-
-          <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+          <Button variant="contained" color="primary" onClick={handelOrder}  fullWidth sx={{ mt: 2 }}>
             Proceed to Checkout
           </Button>
-          
         </>
       )}
     </Container>

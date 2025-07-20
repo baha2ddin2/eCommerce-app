@@ -1,10 +1,11 @@
-import { useRef, useState , useNavigate  } from 'react';
+import { useRef, useState   } from 'react';
 import {Button,FormControl,InputLabel,OutlinedInput,TextField,InputAdornment,Card,CardContent,Alert,IconButton,Box} from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../slices/user';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function SignIn() {
@@ -24,7 +25,7 @@ export default function SignIn() {
     const handleClickShowcheckPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) =>event.preventDefault();
     const handleMouseDowncheckPassword = (event) =>event.preventDefault();
-    const [err,setErr] = useState([])
+    const [err,setErr] = useState(null)
     const handelsignin = async (event)=>{
         event.preventDefault()
         const user = refUser.current.value
@@ -88,8 +89,6 @@ export default function SignIn() {
                 refCheckPassword.current.value = "";
                 refPhone.current.value = "";
                 navigate("/home");
-            } else {
-                setErr(result.payload || "Something went wrong");
             }
         } catch (err) {
             setErr("Unexpected error");

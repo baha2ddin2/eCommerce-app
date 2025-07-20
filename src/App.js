@@ -16,6 +16,7 @@ import HomePage from './home/homepage/homepage'
 import CategoryPage from './home/category/category'
 import EditUserPage from './home/profile/editUser'
 import ChangePasswordPage from './home/profile/changePassword'
+import OrderStepper from './home/cart/completOrder'
 
 function App() {
   axios.defaults.headers.common['token'] = localStorage.getItem("token");
@@ -30,6 +31,7 @@ function App() {
               <Route path='profil/:user' element={<Profil/>}/>
               <Route path='category/:category' element={<CategoryPage/>}/>
               <Route path='edit-profile/:user' element={<EditUserPage/>}/>
+              <Route path='complet-order/:user' element={<OrderStepper/>}/>
               <Route index element={<HomePage/>}/>
           </Route>
           <Route path="/" index element={<Login/>} />

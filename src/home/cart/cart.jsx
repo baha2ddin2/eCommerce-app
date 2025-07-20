@@ -7,7 +7,9 @@ import Alert from '@mui/material/Alert';
 import CartList from "./cartlist"
 import CartSkeleton from "./cartSkeleton"
 import { newQuantity } from "../../slices/cart"
+
 export default function Cart (){
+    
     const {user} = useParams()
     const dispatch = useDispatch()
     const landing = useSelector((state)=>state.cart.loading)
@@ -18,7 +20,6 @@ export default function Cart (){
     useEffect(()=>{
         dispatch(userCart({user}))
     },[user,dispatch])
-
     const handleDelete = (id) => {
       dispatch(deleteCart({id}))
       .unwrap()
@@ -36,21 +37,20 @@ export default function Cart (){
 
 
   const handleIncrease =  (id) => {
-  const item = cartdata.find((item) => item.cart_id === id);
-  if (item ) {
-    const newQty = item.quantity + 1;
-    dispatch(newQuantity({ id, quantity: newQty }));
-  };
+    const item = cartdata.find((item) => item.cart_id === id);
+    if (item ) {
+      const newQty = item.quantity + 1;
+      dispatch(newQuantity({ id, quantity: newQty }));
+    };
   }
   const handleDecrease =  (id) => {
-  const item = cartdata.find((item) => item.cart_id === id);
-  if (item && item.quantity > 1) {
-    const newQty = item.quantity - 1;
-    dispatch(newQuantity({ id, quantity: newQty }));
-
+    const item = cartdata.find((item) => item.cart_id === id);
+    if (item && item.quantity > 1) {
+      const newQty = item.quantity - 1;
+      dispatch(newQuantity({ id, quantity: newQty }));
+    }
   }
-
-}
+  
   if (landing) return <CartSkeleton />
   if (error) return error
 
@@ -61,6 +61,7 @@ export default function Cart (){
                 onDelete={handleDelete}
                 onIncrease={handleIncrease}
                 onDecrease={handleDecrease}
+                user={user}
             />
             {visibleAlert &&(
                 <Alert sx={{
