@@ -19,6 +19,7 @@ import OrderStepper from './home/cart/completOrder'
 import Dashboard from './dashboard/dashboard'
 import OrderDetailsPage from './dashboard/orderPage'
 import DashboardPage from './dashboard/dashbordPage'
+import AllCustomersPage from './dashboard/allCostumers'
 
 function App() {
     return (
@@ -36,6 +37,7 @@ function App() {
               <Route path='dashboard/:user' element={<Dashboard/>}>
                 <Route index element={<DashboardPage/>}/>
                 <Route path='order/:id' element={<OrderDetailsPage/>}/>
+                <Route path='all-Costumers' element={<AllCustomersPage/>}/>
               </Route>
           </Route>
           <Route path="/" index element={<Login/>} />

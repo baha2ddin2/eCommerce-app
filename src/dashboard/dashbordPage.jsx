@@ -81,9 +81,9 @@ export default function DashboardPage () {
               <span
                 style={{
                   color:
-                    order.status === "pending"
+                    order.status === "pending" || order.status ==="delivered"
                       ? "orange"
-                      : order.status === "completed"
+                      : order.status === "shipped"
                       ? "green"
                       : "red",
                   fontWeight: "bold",
