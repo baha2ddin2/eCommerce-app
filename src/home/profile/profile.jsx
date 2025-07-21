@@ -14,6 +14,7 @@ import { logoutUser, profileuser , logout } from "../../slices/user";
 import OrdersUI from "./orders";
 import { fullorder } from "../../slices/orders";
 import EditSquareIcon from '@mui/icons-material/EditSquare';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 export  function Profil(){
     const {user}= useParams()
@@ -60,6 +61,11 @@ export  function Profil(){
                       <Link component={LinkRoute} to={`/home/edit-profile/${user}`}>
                         <EditSquareIcon />
                       </Link>
+                      {userData.role ==="admin"?
+                        <Link component={LinkRoute} to={`/home/dashboard/${user}`}>
+                          < DashboardIcon style={{marginLeft : "10px"}}/>
+                        </Link>:""
+                      }
                     </IconButton>
                   </Box>
 

@@ -10,21 +10,22 @@ import Cart from './home/cart/cart'
 import {Profil} from './home/profile/profile'
 import ResetPassword from './resetPassword/resetPassword'
 import SuccessPage from './succes page/succesPage'
-import axios from 'axios'
 import ProductPage from './home/all products/allProducts'
 import HomePage from './home/homepage/homepage'
 import CategoryPage from './home/category/category'
 import EditUserPage from './home/profile/editUser'
 import ChangePasswordPage from './home/profile/changePassword'
 import OrderStepper from './home/cart/completOrder'
+import Dashboard from './dashboard/dashbordPage'
+import OrderDetailsPage from './dashboard/orderPage'
+import DashboardPage from './dashboard/dashbordPage'
 
 function App() {
-  axios.defaults.headers.common['token'] = localStorage.getItem("token");
-
     return (
     <BrowserRouter>
         <Routes>
           <Route path="/home" element={<Home/>} >
+              <Route index element={<HomePage/>}/>
               <Route path='item/:id' element={<Item/>}/>
               <Route path='all-products' element={<ProductPage/>}/>
               <Route path='cart/:user' element={<Cart/>}/>
@@ -32,7 +33,10 @@ function App() {
               <Route path='category/:category' element={<CategoryPage/>}/>
               <Route path='edit-profile/:user' element={<EditUserPage/>}/>
               <Route path='complet-order/:user' element={<OrderStepper/>}/>
-              <Route index element={<HomePage/>}/>
+              <Route path='dashboard/:user' element={<Dashboard/>}>
+                <Route index element={<DashboardPage/>}/>
+                <Route path='order/:id' element={<OrderDetailsPage/>}/>
+              </Route>
           </Route>
           <Route path="/" index element={<Login/>} />
           <Route path='/forgot-password' element={<ForgetPassword/>}/>

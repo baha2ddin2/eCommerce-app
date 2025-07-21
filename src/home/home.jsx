@@ -6,7 +6,6 @@ import { Outlet } from "react-router-dom"
   return (
     <>
         <CustomHeader/>
-
         <Outlet/>
     </>
   )}
