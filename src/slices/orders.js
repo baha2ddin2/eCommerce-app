@@ -15,6 +15,39 @@ export const fullorder = createAsyncThunk(
             return thunkAPI.rejectWithValue(errorMsg)
         }
 })
+
+export const changeStatus = createAsyncThunk(
+    "order/changeStatus",
+    async ({status, id , total },thunkAPI)=>{
+        try {
+            const response = await axios.put(`http://localhost:3001/api/orders/${id}`,{
+              status ,
+              total
+            },{
+            withCredentials: true
+        })
+            return response.data
+        }catch(error){
+            const errorMsg = error.response.data.error|| 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+        }
+})
+
+
+
+export const getOrderById = createAsyncThunk(
+    "order/getOrderById",
+    async ({id},thunkAPI)=>{
+        try {
+            const response = await axios.get(`http://localhost:3001/api/orders/fullorder/${id}`,{
+            withCredentials: true
+        })
+            return response.data
+        }catch(error){
+            const errorMsg = error.response.data.error|| 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+        }
+})
 export const allOrders = createAsyncThunk(
     "order/allOrders",
     async (_,thunkAPI)=>{
@@ -86,6 +119,7 @@ export const creatItems = createAsyncThunk(
 const  orderSlice = createSlice({
     name :"order",
     initialState : {
+        orderById :[],
         allOrders :[],
         orderUser :[],
         error:null,
@@ -109,7 +143,8 @@ const  orderSlice = createSlice({
                 localStorage.removeItem("cart")
             }).addCase(allOrders.fulfilled ,(state,action)=>{
               state.allOrders =action.payload
-
+            }).addCase(getOrderById.fulfilled ,(state,action)=>{
+              state.orderById=action.payload
             })
         }
 })

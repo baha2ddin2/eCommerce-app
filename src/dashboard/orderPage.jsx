@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
   Typography,
@@ -8,90 +9,131 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  CircularProgress,
+  Divider,
+  Chip,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel
 } from "@mui/material";
-import axios from "axios";
 import { useParams } from "react-router-dom";
+import { changeStatus, getOrderById } from "../slices/orders";
 
 export default function OrderDetailsPage() {
-  const { id } = useParams(); // example: /order/5
-  const [order, setOrder] = useState(null);
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const order = useSelector((state) => state.order.orderById) || [];
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
-    console.log(id)
-    const fetchOrder = async () => {
-      try {
-        const [orderRes, itemsRes] = await Promise.all([
-          axios.get(`http://localhost:3001/api/orders/${id}`),
-          axios.get(`http://localhost:3001/api/orderItem/order/${id}`)
-        ]);
-        setOrder(orderRes.data);
-        setItems(itemsRes.data);
-      } catch (error) {
-        console.error("Failed to fetch order details", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    dispatch(getOrderById({ id }));
+  }, [id, dispatch]);
 
-    fetchOrder();
-  }, [id]);
+  useEffect(() => {
+    if (order.length > 0) {
+      setStatus(order[0]?.status || "");
+    }
+  }, [order]);
 
-  if (loading) {
-    return <CircularProgress />;
-  }
+  const total = order
+    .reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0)
+    .toFixed(2);
 
-  if (!order) {
+  if (!order || order.length === 0) {
     return <Typography color="error">Order not found.</Typography>;
   }
-
-  const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
+  const handelchange = (e) =>{
+    const newStatus = e.target.value;
+    setStatus(newStatus);
+    dispatch(changeStatus({status : newStatus ,total,id})).then(() => {
+      dispatch(getOrderById({ id }))
+    });
+  }
 
   return (
-    <Box p={4}>
-      <Typography variant="h5" gutterBottom>
-        Order Details #{order.id}
+    <Box p={4} maxWidth="1000px" mx="auto">
+      <Typography variant="h4" gutterBottom>
+        🧾 Order #{id} Details
       </Typography>
 
-      <Paper sx={{ p: 2, mb: 4 }}>
-        <Typography variant="subtitle1">Customer: {order.customer_name}</Typography>
-        <Typography variant="subtitle1">Address: {order.address}</Typography>
-        <Typography variant="subtitle1">Status: {order.status}</Typography>
+      <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 3 }}>
+        <Typography variant="h6" gutterBottom>
+          Customer Information
+        </Typography>
+        <Divider sx={{ mb: 2 }} />
+        <Typography variant="body1">
+          <strong>Name:</strong> {order[0].customer_name}
+        </Typography>
+        <Typography variant="body1">
+          <strong>Address:</strong> {order[0].adress}
+        </Typography>
+
+        <Box mt={2} display="flex" alignItems="center" gap={2}>
+          <Chip
+            label={status}
+            color={
+              status === "shipped"
+                ? "success"
+                : status === "cancelled"
+                ? "error"
+                : "warning"
+            }
+            variant="outlined"
+            sx={{ fontWeight: "bold", textTransform: "capitalize" }}
+          />
+
+          <FormControl size="small">
+            <InputLabel id="status-label">Change Status</InputLabel>
+            <Select
+              labelId="status-label"
+              value={status}
+              label="Change Status"
+              onChange={handelchange}
+            >
+              <MenuItem value="pending">Pending</MenuItem>
+              <MenuItem value="shipped">Shipped</MenuItem>
+              <MenuItem value="delivered">Delivered</MenuItem>
+              <MenuItem value="cancelled">Cancelled</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Paper>
 
-      <Typography variant="h6">Products</Typography>
-      <Table sx={{ mt: 2 }} aria-label="order items">
-        <TableHead>
-          <TableRow>
-            <TableCell>Product</TableCell>
-            <TableCell>Quantity</TableCell>
-            <TableCell>Price</TableCell>
-            <TableCell>Total</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {items.map((item) => (
-            <TableRow key={item.product_id}>
-              <TableCell>{item.product_name}</TableCell>
-              <TableCell>{item.quantity}</TableCell>
-              <TableCell>${item.price}</TableCell>
-              <TableCell>${(item.price * item.quantity).toFixed(2)}</TableCell>
+      <Typography variant="h6" gutterBottom>
+        🛒 Ordered Products
+      </Typography>
+      <Paper elevation={2} sx={{ borderRadius: 3 }}>
+        <Table>
+          <TableHead>
+            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+              <TableCell><strong>Product</strong></TableCell>
+              <TableCell><strong>Quantity</strong></TableCell>
+              <TableCell><strong>Price</strong></TableCell>
+              <TableCell><strong>Total</strong></TableCell>
             </TableRow>
-          ))}
-          <TableRow>
-            <TableCell colSpan={3} align="right">
-              <strong>Total</strong>
-            </TableCell>
-            <TableCell>
-              <strong>${total}</strong>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {order.map((item) => (
+              <TableRow key={item.product_id}>
+                <TableCell>{item.product_name}</TableCell>
+                <TableCell>{item.quantity}</TableCell>
+                <TableCell>${parseFloat(item.price).toFixed(2)}</TableCell>
+                <TableCell>
+                  ${(item.quantity * parseFloat(item.price)).toFixed(2)}
+                </TableCell>
+              </TableRow>
+            ))}
+            <TableRow>
+              <TableCell colSpan={3} align="right">
+                <strong>Grand Total</strong>
+              </TableCell>
+              <TableCell>
+                <strong>${total}</strong>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </Paper>
     </Box>
   );
-};
-
-
+}
