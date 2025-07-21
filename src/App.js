@@ -20,6 +20,7 @@ import Dashboard from './dashboard/dashboard'
 import OrderDetailsPage from './dashboard/orderPage'
 import DashboardPage from './dashboard/dashbordPage'
 import AllCustomersPage from './dashboard/allCostumers'
+import AllProductsPage from './dashboard/allProducts'
 
 function App() {
     return (
@@ -38,6 +39,7 @@ function App() {
                 <Route index element={<DashboardPage/>}/>
                 <Route path='order/:id' element={<OrderDetailsPage/>}/>
                 <Route path='all-Costumers' element={<AllCustomersPage/>}/>
+                <Route path='all-products' element={<AllProductsPage/>}/>
               </Route>
           </Route>
           <Route path="/" index element={<Login/>} />

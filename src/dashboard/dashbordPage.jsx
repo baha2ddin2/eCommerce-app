@@ -27,9 +27,9 @@ export default function DashboardPage () {
   console.log(orders)
   // Dummy data
   const stats = [
-    { label: "Total Orders", value: orders.length , icon: <ShoppingCartIcon /> },
-    { label: "Total Products", value: products.length, icon: <StoreIcon /> },
-    { label: "Total Users", value: users.length, icon: <PeopleIcon /> },
+    { label: "Total Orders" ,value: orders.length , icon: <ShoppingCartIcon /> },
+    { label: "Total Products",link : 'all-products', value: products.length, icon: <StoreIcon /> },
+    { label: "Total Users", link : 'all-costumers', value: users.length, icon: <PeopleIcon /> },
   ];
 
 
@@ -41,7 +41,8 @@ export default function DashboardPage () {
 
       <Grid container spacing={3}>
         {stats.map((item, index) => (
-          <Grid item xs={12} sm={4} key={index}>
+          <Link component={RouteLink} to={item.link} key={index} underline="none">
+          <Grid item xs={12} sm={4} >
             <Paper elevation={3} sx={{ p: 2, display: "flex", alignItems: "center" }}>
               {item.icon}
               <Box ml={2}>
@@ -50,6 +51,7 @@ export default function DashboardPage () {
               </Box>
             </Paper>
           </Grid>
+          </Link>
         ))}
       </Grid>
 
