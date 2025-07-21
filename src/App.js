@@ -16,7 +16,7 @@ import CategoryPage from './home/category/category'
 import EditUserPage from './home/profile/editUser'
 import ChangePasswordPage from './home/profile/changePassword'
 import OrderStepper from './home/cart/completOrder'
-import Dashboard from './dashboard/dashbordPage'
+import Dashboard from './dashboard/dashboard'
 import OrderDetailsPage from './dashboard/orderPage'
 import DashboardPage from './dashboard/dashbordPage'
 

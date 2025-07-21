@@ -157,10 +157,27 @@ export const changePassword = createAsyncThunk(
     }
 )
 
+export const getUsers = createAsyncThunk(
+    "user/getUsers",
+    async(_,thunkAPI)=>{
+        try{
+            const userinfo = await axios.get(`http://localhost:3001/api/users`, {
+                    withCredentials: true,
+            })
+            return userinfo.data
+        }catch(error){
+            const errorMsg =  error?.response?.data?.error || error?.message||error.response.error || 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+
+        }
+    }
+)
+
 
 const  UserSlice = createSlice({
     name :"user",
     initialState : {
+        allUsers : [],
         data :null,
         error: null,
     },
@@ -228,6 +245,9 @@ const  UserSlice = createSlice({
             })
             .addCase(checkAuth.fulfilled,(state,action)=>{
                 state.error = null
+            })
+            .addCase(getUsers.fulfilled ,(state , action)=>{
+                state.allUsers = action.payload
             })
             // .addCase(checkAuth.rejected,(state,action )=>{
             //     state.error= action.payload

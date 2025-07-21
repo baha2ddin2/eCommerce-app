@@ -15,6 +15,19 @@ export const fullorder = createAsyncThunk(
             return thunkAPI.rejectWithValue(errorMsg)
         }
 })
+export const allOrders = createAsyncThunk(
+    "order/allOrders",
+    async (_,thunkAPI)=>{
+        try {
+            const response = await axios.get(`http://localhost:3001/api/orders`,{
+            withCredentials: true
+        })
+            return response.data
+        }catch(error){
+            const errorMsg = error.response.data.error|| 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+        }
+})
 export const creatOrder = createAsyncThunk(
     "order/creatOrder",
     async ({user,adress},thunkAPI)=>{
@@ -73,6 +86,7 @@ export const creatItems = createAsyncThunk(
 const  orderSlice = createSlice({
     name :"order",
     initialState : {
+        allOrders :[],
         orderUser :[],
         error:null,
         loading:true
@@ -93,6 +107,9 @@ const  orderSlice = createSlice({
             }).addCase(creatItems.fulfilled,(state,action)=>{
                 localStorage.removeItem("idOrder")
                 localStorage.removeItem("cart")
+            }).addCase(allOrders.fulfilled ,(state,action)=>{
+              state.allOrders =action.payload
+
             })
         }
 })
