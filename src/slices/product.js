@@ -46,6 +46,28 @@ export const addProduct = createAsyncThunk(
         }
     }
 )
+
+export const editProduct = createAsyncThunk(
+    "product/editProduct",
+    async ({name ,mark ,category,description,price,stock,id},thunkAPI)=>{
+        try {
+            const response = await axios.put(`http://localhost:3001/api/products/${id}`,{
+                name,
+                mark,
+                category,
+                description,
+                price,
+                stock,
+            },{
+                withCredentials: true
+            })
+            return response.data
+        }catch(error){
+            const errorMsg = error.response.data || 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+        }
+    }
+)
 export const uploadPicture = createAsyncThunk(
     "product/uploadPicture",
     async ({file , id},thunkAPI)=>{

@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteProduct, productItem } from "../slices/product";
+import { deleteProduct, editProduct, productItem } from "../slices/product";
 import { useNavigate, useParams } from "react-router-dom";
 
 const categories = ["Electronics", "Clothing", "Books", "Phones", "Others"];
@@ -60,8 +60,16 @@ export default function EditProductForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Call updateProduct here
-    console.log("Submit updated product:", form);
+    dispatch(editProduct({
+        id : id,
+        name : form.name ,
+        mark : form.mark,
+        price : form.price,
+        category : form.category ,
+        stock : form.stock
+    })).unwrap().then(()=>{
+        navigate("/home/dashboard/bahae22/all-products");
+    })
   };
 
   const handleDelete = () => {
