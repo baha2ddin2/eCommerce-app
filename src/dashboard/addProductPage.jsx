@@ -8,10 +8,13 @@ import {
   Stack,
   Paper,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { addProduct, uploadPicture } from "../slices/product";
 
 const categories = ["Electronics", "Clothing", "Books", "Phones", "Others"];
 
 export default function AddProductForm({ onSubmit }) {
+    const dispatch = useDispatch()
   const [form, setForm] = useState({
     name: "",
     mark: "",
@@ -32,6 +35,17 @@ export default function AddProductForm({ onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(addProduct({
+        name : form.name,
+        mark : form.mark ,
+        category :form.category,
+        description : form.description,
+        price : form.price,
+        stock : form.stock
+    })).unwrap().then((results)=>{
+        console.log(results)
+        dispatch(uploadPicture({file : form.image , id : results.id }))
+    })
     if (onSubmit) onSubmit(form);
     console.log("Product Submitted:", form);
   };

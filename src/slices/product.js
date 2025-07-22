@@ -25,6 +25,48 @@ export const review = createAsyncThunk(
         }
 })
 
+export const addProduct = createAsyncThunk(
+    "product/addProduct",
+    async ({name ,mark ,category,description,price,stock},thunkAPI)=>{
+        try {
+            const response = await axios.post(`http://localhost:3001/api/products`,{
+                name,
+                mark,
+                category,
+                description,
+                price,
+                stock,
+            },{
+                withCredentials: true
+            })
+            return response.data
+        }catch(error){
+            const errorMsg = error.response.data || 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+        }
+    }
+)
+export const uploadPicture = createAsyncThunk(
+    "product/uploadPicture",
+    async ({file , id},thunkAPI)=>{
+        try {
+            const formData = new FormData();
+            formData.append("image", file);
+            formData.append("id", id);
+            const response = await axios.post(`http://localhost:3001/api/products/upload-picture`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                withCredentials: true
+            })
+            return response.data
+        }catch(error){
+            const errorMsg = error.response.data || 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+        }
+    }
+)
+
 export const Allproduct = createAsyncThunk(
     "product/getAllProducts",
     async (_,thunkAPI)=>{

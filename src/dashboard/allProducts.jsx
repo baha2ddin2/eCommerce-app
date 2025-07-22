@@ -13,49 +13,16 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Link as RouteLink  } from "react-router-dom";
-
-const products = [
-  {
-    id: 1,
-    name: "Wireless Mouse",
-    mark: "Logitech",
-    price: "25.99",
-    stock: 50,
-    category: "phones",
-    image_url: "mouse.jpg",
-    average_rating: "5.0",
-    total_reviews: 1
-  },
-  {
-    id: 2,
-    name: "Keyboard",
-    mark: "Corsair",
-    price: "45.50",
-    stock: 30,
-    category: "laptops",
-    image_url: "keyboard.jpg",
-    average_rating: null,
-    total_reviews: 0
-  },
-  {
-    id: 3,
-    name: "USB-C Charger",
-    mark: "Anker",
-    price: "19.99",
-    stock: 100,
-    category: "airpots",
-    image_url: "charger.jpg",
-    average_rating: null,
-    total_reviews: 0
-  }
-];
+import { useSelector } from "react-redux";
 
 export default function AllProductsPage() {
+
+  const products = useSelector((state)=>state.product.data)||[]
   return (
     <Box p={4}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={4}>
         <Typography variant="h4">🛒 All Products</Typography>
-        <Link component={RouteLink} to={`add-/home/dashboard/bahae22/add-product`} underline="none">
+        <Link component={RouteLink} to={`/home/dashboard/bahae22/add-product`} underline="none">
           <Button variant="contained" startIcon={<AddIcon />} color="primary">
             Add Product
           </Button>
@@ -69,7 +36,7 @@ export default function AllProductsPage() {
               <CardMedia
                 component="img"
                 height="180"
-                image={`/images/${product.image_url}`} // Update path based on your server
+                image={product.image_url} // Update path based on your server
                 alt={product.name}
               />
               <CardContent>

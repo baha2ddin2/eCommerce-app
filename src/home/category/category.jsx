@@ -64,7 +64,7 @@ export default function CategoryPage() {
           onChange={handlePriceChange}
           valueLabelDisplay="auto"
           min={0}
-          max={100}
+          max={500}
         />
 
         <Typography gutterBottom mt={2}>

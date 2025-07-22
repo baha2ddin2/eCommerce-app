@@ -57,7 +57,7 @@ export default function ProductsPage() {
           onChange={handlePriceChange}
           valueLabelDisplay="auto"
           min={0}
-          max={100}
+          max={500}
         />
 
         <Typography gutterBottom mt={2}>Minimum Rating</Typography>
