@@ -21,6 +21,7 @@ import OrderDetailsPage from './dashboard/orderPage'
 import DashboardPage from './dashboard/dashbordPage'
 import AllCustomersPage from './dashboard/allCostumers'
 import AllProductsPage from './dashboard/allProducts'
+import AddProductForm from './dashboard/addProductPage'
 
 function App() {
     return (
@@ -40,6 +41,7 @@ function App() {
                 <Route path='order/:id' element={<OrderDetailsPage/>}/>
                 <Route path='all-Costumers' element={<AllCustomersPage/>}/>
                 <Route path='all-products' element={<AllProductsPage/>}/>
+                <Route path='add-product' element={<AddProductForm/>}/>
               </Route>
           </Route>
           <Route path="/" index element={<Login/>} />

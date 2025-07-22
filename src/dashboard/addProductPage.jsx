@@ -1,0 +1,123 @@
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  MenuItem,
+  Stack,
+  Paper,
+} from "@mui/material";
+
+const categories = ["Electronics", "Clothing", "Books", "Phones", "Others"];
+
+export default function AddProductForm({ onSubmit }) {
+  const [form, setForm] = useState({
+    name: "",
+    mark: "",
+    description: "",
+    price: "",
+    category: "",
+    stock: "",
+    image: null,
+  });
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: files ? files[0] : value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (onSubmit) onSubmit(form);
+    console.log("Product Submitted:", form);
+  };
+
+  return (
+    <Paper elevation={3} sx={{ maxWidth: 600, mx: "auto", p: 4, mt: 4 }}>
+      <Typography variant="h5" gutterBottom>
+        Add New Product
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit} noValidate>
+        <Stack spacing={2}>
+          <TextField
+            label="Product Name"
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            required
+            fullWidth
+          />
+          <TextField
+            label="Mark / Brand"
+            name="mark"
+            value={form.mark}
+            onChange={handleChange}
+            fullWidth
+            required
+          />
+          <TextField
+            label="Description"
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            multiline
+            rows={3}
+            fullWidth
+            required
+          />
+          <TextField
+            label="Price ($)"
+            name="price"
+            value={form.price}
+            onChange={handleChange}
+            type="number"
+            required
+            fullWidth
+          />
+          <TextField
+            select
+            label="Category"
+            name="category"
+            value={form.category}
+            onChange={handleChange}
+            required
+            fullWidth
+          >
+            {categories.map((cat) => (
+              <MenuItem key={cat} value={cat}>
+                {cat}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            label="Stock Quantity"
+            name="stock"
+            value={form.stock}
+            onChange={handleChange}
+            type="number"
+            required
+            fullWidth
+          />
+          <Button variant="contained" component="label">
+            Upload Image
+            <input
+              type="file"
+              name="image"
+              hidden
+              accept="image/*"
+              onChange={handleChange}
+            />
+          </Button>
+          {form.image && <Typography>{form.image.name}</Typography>}
+          <Button type="submit" variant="contained" color="primary">
+            Add Product
+          </Button>
+        </Stack>
+      </Box>
+    </Paper>
+  );
+}

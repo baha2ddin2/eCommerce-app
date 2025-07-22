@@ -7,10 +7,12 @@ import {
   CardMedia,
   Grid,
   Typography,
+  Link,
   Stack,
   Rating
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { Link as RouteLink  } from "react-router-dom";
 
 const products = [
   {
@@ -53,9 +55,11 @@ export default function AllProductsPage() {
     <Box p={4}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={4}>
         <Typography variant="h4">🛒 All Products</Typography>
-        <Button variant="contained" startIcon={<AddIcon />} color="primary">
-          Add Product
-        </Button>
+        <Link component={RouteLink} to={`add-/home/dashboard/bahae22/add-product`} underline="none">
+          <Button variant="contained" startIcon={<AddIcon />} color="primary">
+            Add Product
+          </Button>
+        </Link>
       </Stack>
 
       <Grid container spacing={3}>
