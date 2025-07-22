@@ -89,6 +89,19 @@ export const getCategory = createAsyncThunk(
             return thunkAPI.rejectWithValue(errorMsg)
         }
 })
+export const deleteProduct = createAsyncThunk(
+    "product/deleteProduct",
+    async ({id},thunkAPI)=>{
+        try {
+            const response = await axios.delete(`http://localhost:3001/api/products/${id}`,{
+                withCredentials: true
+            })
+            return response.data
+        }catch(error){
+            const errorMsg = error.response.error || 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+        }
+})
 
 
 export const addReview = createAsyncThunk(

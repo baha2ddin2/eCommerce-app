@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -12,17 +12,22 @@ import {
   Rating
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { Link as RouteLink  } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link as RouteLink, useParams  } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Allproduct } from "../slices/product";
 
 export default function AllProductsPage() {
-
+  const {user}=useParams()
+  const dispatch = useDispatch()
+ useEffect(()=>{
+    dispatch(Allproduct())
+ },[dispatch])
   const products = useSelector((state)=>state.product.data)||[]
   return (
     <Box p={4}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={4}>
         <Typography variant="h4">🛒 All Products</Typography>
-        <Link component={RouteLink} to={`/home/dashboard/bahae22/add-product`} underline="none">
+        <Link component={RouteLink} to={`/home/dashboard/${user}/add-product`} underline="none">
           <Button variant="contained" startIcon={<AddIcon />} color="primary">
             Add Product
           </Button>
@@ -31,6 +36,11 @@ export default function AllProductsPage() {
 
       <Grid container spacing={3}>
         {products.map((product) => (
+          <Link
+              component={RouteLink}
+              to={`/home/dashboard/${user}/edit-product/${product.id}`}
+              underline="none"
+            >
           <Grid item xs={12} sm={6} md={4} key={product.id}>
             <Card sx={{ borderRadius: 3 }}>
               <CardMedia
@@ -69,6 +79,7 @@ export default function AllProductsPage() {
               </CardContent>
             </Card>
           </Grid>
+          </Link>
         ))}
       </Grid>
     </Box>
