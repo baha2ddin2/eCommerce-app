@@ -4,9 +4,9 @@ import axios from "axios";
 
 export const newQuantity = createAsyncThunk(
     "cart/increase",
-    async ({id , quantity},thunkAPI)=>{
+    async ({id , quantity,user},thunkAPI)=>{
         try {
-            const response = await axios.put(`http://localhost:3001/api/cart/${id}`,{
+            const response = await axios.put(`http://localhost:3001/api/cart/${id}/${user}`,{
             quantity : quantity
         },{
             withCredentials: true
@@ -19,9 +19,9 @@ export const newQuantity = createAsyncThunk(
 })
 export const deleteCart = createAsyncThunk(
     "cart/deleteCart",
-    async ({id},thunkAPI)=>{
+    async ({id,user},thunkAPI)=>{
         try {
-            const response = await axios.delete(`http://localhost:3001/api/cart/${id}`,{
+            const response = await axios.delete(`http://localhost:3001/api/cart/${id}/${user}`,{
             withCredentials: true
         })
             return response.data

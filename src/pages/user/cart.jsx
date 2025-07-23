@@ -20,7 +20,7 @@ export default function Cart (){
         dispatch(userCart({user}))
     },[user,dispatch])
     const handleDelete = (id) => {
-      dispatch(deleteCart({id}))
+      dispatch(deleteCart({id , user}))
       .unwrap()
       .then(()=>{
         setVisibleAlert(true)
@@ -39,14 +39,14 @@ export default function Cart (){
     const item = cartdata.find((item) => item.cart_id === id);
     if (item ) {
       const newQty = item.quantity + 1;
-      dispatch(newQuantity({ id, quantity: newQty }));
+      dispatch(newQuantity({ id, quantity: newQty ,user }));
     };
   }
   const handleDecrease =  (id) => {
     const item = cartdata.find((item) => item.cart_id === id);
     if (item && item.quantity > 1) {
       const newQty = item.quantity - 1;
-      dispatch(newQuantity({ id, quantity: newQty }));
+      dispatch(newQuantity({ id, quantity: newQty ,user }));
     }
   }
   
