@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteProduct, editProduct, productItem } from "../slices/product";
+import { deleteProduct, editProduct, productItem, uploadPicture } from "../slices/product";
 import { useNavigate, useParams } from "react-router-dom";
 
 const categories = ["Electronics", "Clothing", "Books", "Phones", "Others"];
@@ -68,7 +68,10 @@ export default function EditProductForm() {
         category : form.category ,
         stock : form.stock
     })).unwrap().then(()=>{
-        navigate("/home/dashboard/bahae22/all-products");
+        dispatch(uploadPicture({id, image : form.image})).unwrap()
+        .then(()=>{
+          navigate("/home/dashboard/bahae22/all-products");
+        })
     })
   };
 

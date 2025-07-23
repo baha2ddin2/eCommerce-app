@@ -61,7 +61,7 @@ export default function FullPageProductView({ item , addcart}) {
             }}
           >
             <img
-              src={`/${image_url}`}
+              src={image_url}
               alt={name}
               style={{
                 width: "100%",

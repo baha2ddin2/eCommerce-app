@@ -98,7 +98,7 @@ export default function HomePage() {
                   <CardMedia
                     component="img"
                     height="140"
-                    image={`/images/${product.image_url}`}
+                    image={product.image_url}
                     alt={product.name}
                   />
                   <CardContent>
