@@ -57,7 +57,7 @@ export default function CustomHeader() {
 
 
       <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
-        {user || checkAuthState ? (
+        {user && checkAuth.fulfilled ? (
           <>
             <Link component={RouterLink} to={`profil/${user}`} underline="none">
               <FaceIcon />

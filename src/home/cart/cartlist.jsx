@@ -5,36 +5,29 @@ import {
   Container,
   Button,
   Box,
-  Divider
+  Divider,
+  Dialog,
+  DialogActions,
+  DialogTitle
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useNavigate } from "react-router-dom";
-
 import { useState } from 'react';
 
-export default function CartList({ cartItems, onDelete, onIncrease, onDecrease,user }) {
-  const navigate = useNavigate()
-  const [open, setOpen] = useState(false);
-  const handleClose = ()=>{
-      setOpen(false);
-    }
-  const total = cartItems.reduce(
-    (sum, item) => sum + parseFloat(item.total_line_price),
-    0
-  );
+export default function CartList({ cartItems, onDelete, onIncrease, onDecrease, user }) {
+  const navigate = useNavigate();
+  const [selectedItemId, setSelectedItemId] = useState(null);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const total = cartItems.reduce((sum, item) => sum + parseFloat(item.total_line_price), 0);
 
-     const handelOrder =()=>{
-      navigate(`/home/complet-order/${user}`)
-    }
+  const handelOrder = () => {
+    navigate(`/home/complet-order/${user}`);
+  };
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
@@ -88,27 +81,27 @@ export default function CartList({ cartItems, onDelete, onIncrease, onDecrease,u
                 </Typography>
               </Box>
 
-              <IconButton color="error" onClick={() =>setOpen(true)}>
+              <IconButton color="error" onClick={() => setSelectedItemId(item.cart_id)}>
                 <DeleteIcon />
               </IconButton>
+
               <Dialog
-            fullScreen={fullScreen}
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="responsive-dialog-title"
+                fullScreen={fullScreen}
+                open={selectedItemId === item.cart_id}
+                onClose={() => setSelectedItemId(null)}
+                aria-labelledby="responsive-dialog-title"
               >
-              <DialogTitle id="responsive-dialog-title">
-                Are you sure you want to delete this item form your cart?
-              </DialogTitle>
-              <DialogActions>
-              <Button autoFocus onClick={handleClose}>Cancel</Button>
-              <Button onClick={() =>{
-                console.log(item.cart_id)
-                onDelete(item.cart_id)
-                setOpen(false)
-                }} color="error" autoFocus>Yes</Button>
-              </DialogActions>
-          </Dialog>
+                <DialogTitle id="responsive-dialog-title">
+                  Are you sure you want to delete this item from your cart?
+                </DialogTitle>
+                <DialogActions>
+                  <Button autoFocus onClick={() => setSelectedItemId(null)}>Cancel</Button>
+                  <Button onClick={() => {
+                    onDelete(item.cart_id);
+                    setSelectedItemId(null);
+                  }} color="error" autoFocus>Yes</Button>
+                </DialogActions>
+              </Dialog>
             </Card>
           ))}
 
@@ -117,7 +110,7 @@ export default function CartList({ cartItems, onDelete, onIncrease, onDecrease,u
           <Typography variant="h6" align="right">
             Cart Total: ${total.toFixed(2)}
           </Typography>
-          <Button variant="contained" color="primary" onClick={handelOrder}  fullWidth sx={{ mt: 2 }}>
+          <Button variant="contained" color="primary" onClick={handelOrder} fullWidth sx={{ mt: 2 }}>
             Proceed to Checkout
           </Button>
         </>

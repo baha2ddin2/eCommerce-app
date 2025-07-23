@@ -138,6 +138,22 @@ export const profileuser = createAsyncThunk(
         }
     }
 )
+
+export const deleteUser = createAsyncThunk(
+    "user/deleteUser",
+    async({user},thunkAPI)=>{
+        try{
+            const userinfo = await axios.delete(`http://localhost:3001/api/users/${user}`, {
+                    withCredentials: true,
+            })
+            return userinfo.data
+        }catch(error){
+            const errorMsg =  error?.response?.data?.error || error?.message||error.response.error || 'Something went wrong. Please try again.';
+            return thunkAPI.rejectWithValue(errorMsg)
+
+        }
+    }
+)
 export const changePassword = createAsyncThunk(
     "user/changepassword",
     async({user,oldPassword,password},thunkAPI)=>{
