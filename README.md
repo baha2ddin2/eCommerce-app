@@ -83,7 +83,7 @@ ecommerce-app/
 ## Backend
 
 A backend app for this project is also available in the same GitHub account.  
-Check the repository list on [your GitHub profile](https://github.com/your-username) for the backend source code and setup instructions.
+Check the repository list on [my GitHub profile](https://github.com/baha2ddin2) for the backend source code and setup instructions.
 
 ## Contributing
 
