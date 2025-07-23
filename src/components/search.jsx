@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import Autocomplete from '@mui/material/Autocomplete';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { Allproduct } from '../../../slices/product';
+import { Allproduct } from '../slices/product';
 import { useNavigate } from 'react-router-dom';
 
 export default function Search() {

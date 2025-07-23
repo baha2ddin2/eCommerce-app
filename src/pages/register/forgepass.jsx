@@ -7,7 +7,7 @@ import { SignInPage } from '@toolpad/core/SignInPage';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
 
-import { forgetPassword } from '../slices/user';
+import { forgetPassword } from '../../slices/user';
 
 const providers = [{ id: 'credentials', name: 'Email and Password' }];
 

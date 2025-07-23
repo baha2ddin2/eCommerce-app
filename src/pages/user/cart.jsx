@@ -4,12 +4,11 @@ import { deleteCart, userCart } from "../../slices/cart"
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import Alert from '@mui/material/Alert';
-import CartList from "./cartlist"
-import CartSkeleton from "./cartSkeleton"
+import CartList from "../../components/cartlist"
+import CartSkeleton from "../../components/cartSkeleton"
 import { newQuantity } from "../../slices/cart"
 
 export default function Cart (){
-    
     const {user} = useParams()
     const dispatch = useDispatch()
     const landing = useSelector((state)=>state.cart.loading)

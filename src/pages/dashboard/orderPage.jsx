@@ -17,7 +17,7 @@ import {
   InputLabel
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { changeStatus, getOrderById } from "../slices/orders";
+import { changeStatus, getOrderById } from "../../slices/orders";
 
 export default function OrderDetailsPage() {
   const { id } = useParams();

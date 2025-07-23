@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteProduct, editProduct, productItem, uploadPicture } from "../slices/product";
+import { deleteProduct, editProduct, productItem, uploadPicture } from "../../slices/product";
 import { useNavigate, useParams } from "react-router-dom";
 
 const categories = ["Electronics", "Clothing", "Books", "Phones", "Others"];

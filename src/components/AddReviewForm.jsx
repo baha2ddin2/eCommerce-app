@@ -9,7 +9,7 @@ import {
 import { useState,useEffect } from "react";
 import { useDispatch } from "react-redux";
 import CryptoJS from "crypto-js";
-import { addReview } from "../../slices/product";
+import { addReview } from "../slices/product";
 
 export default function AddReviewForm({ productId, onSuccess }) {
   const [comment, setComment] = useState("");

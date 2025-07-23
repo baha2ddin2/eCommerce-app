@@ -9,7 +9,7 @@ import {
   Paper,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { addProduct, uploadPicture } from "../slices/product";
+import { addProduct, uploadPicture } from "../../slices/product";
 
 const categories = ["Electronics", "Clothing", "Books", "Phones", "Others"];
 

@@ -4,7 +4,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../slices/user';
+import { registerUser } from '../../slices/user';
 import { useNavigate } from 'react-router-dom';
 
 

@@ -14,7 +14,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { Link as RouteLink, useParams  } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Allproduct } from "../slices/product";
+import { Allproduct } from "../../slices/product";
 
 export default function AllProductsPage() {
   const {user}=useParams()

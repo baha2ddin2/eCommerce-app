@@ -19,7 +19,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from '@mui/material/styles';
-import { deleteUser, getUsers } from "../slices/user";
+import { deleteUser, getUsers } from "../../slices/user";
 
 export default function AllCustomersPage() {
   const [open, setOpen] = useState(false);

@@ -11,7 +11,7 @@ import { useTheme } from '@mui/material/styles';
 
 import { useDispatch, useSelector  } from "react-redux";
 import { logoutUser, profileuser , logout } from "../../slices/user";
-import OrdersUI from "./orders";
+import OrdersUI from "../../components/orders";
 import { fullorder } from "../../slices/orders";
 import EditSquareIcon from '@mui/icons-material/EditSquare';
 import DashboardIcon from '@mui/icons-material/Dashboard';

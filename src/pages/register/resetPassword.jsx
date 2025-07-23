@@ -5,7 +5,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import {useDispatch ,useSelector} from 'react-redux'
-import  {resetPassword} from '../slices/user'
+import  {resetPassword} from '../../slices/user'
 
 export default function ResetPassword() {
     const [showPassword, setShowPassword] = useState(false);

@@ -2,10 +2,10 @@ import { useEffect , useState } from "react"
 import { useParams } from "react-router-dom"
 import { useDispatch , useSelector } from "react-redux"
 import { productItem, review } from "../../slices/product"
-import FullPageProductView from "./itemUI"
-import ReviewList from "./reviews"
+import FullPageProductView from "../../components/itemUI"
+import ReviewList from "../../components/reviews"
 import Alert from '@mui/material/Alert';
-import AddReviewForm from "./AddReviewForm"
+import AddReviewForm from "../../components/AddReviewForm"
 import { addcart } from "../../slices/cart"
 import CryptoJS from "crypto-js";
 

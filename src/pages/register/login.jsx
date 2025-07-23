@@ -8,8 +8,8 @@ import {AppProvider} from '@toolpad/core/AppProvider';
 import { SignInPage } from '@toolpad/core/SignInPage';
 import { useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, checkAuth } from '../slices/user';
-import {  } from '../slices/user';
+import { loginUser, checkAuth } from '../../slices/user';
+import {  } from '../../slices/user';
 
 
 const providers = [{id: 'credentials', name: 'Email and Password'}];

@@ -1,23 +1,19 @@
 import Link from '@mui/material/Link';
 import FaceIcon from '@mui/icons-material/Face';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import Search from "./search/search";
+import Search from "./search";
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
-import CategoryHeader from './category/headerCategory';
+import CategoryHeader from './headerCategory';
 import { useDispatch } from 'react-redux';
-import { checkAuth } from '../../slices/user';
+import { checkAuth } from '../slices/user';
 
 export default function CustomHeader() {
   const dispatch = useDispatch()
-  const [checkAuthState , setCkeckAuthState ] =useState(true)
   const [user, setUser] = useState(null);
     useEffect(() => {
       dispatch(checkAuth())
-      .unwrap()
-      .then(setCkeckAuthState(true))
-      .catch(setCkeckAuthState(false))
       const encrypted = localStorage.getItem("username");
       if (encrypted) {
         const bytes = CryptoJS.AES.decrypt(encrypted, process.env.REACT_APP_SECRET_KEY);
