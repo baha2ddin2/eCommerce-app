@@ -76,23 +76,16 @@ export default function SignIn() {
             setErr(validationError);
             return;
         }
-
-        try {
-            const result = await dispatch(registerUser({ user, name, email, password, phone }));
-            if (registerUser.fulfilled.match(result)) {
-                // Success
-                setErr(null);
-                refUser.current.value = "";
-                refName.current.value = "";
-                refEmail.current.value = "";
-                refPassword.current.value = "";
-                refCheckPassword.current.value = "";
-                refPhone.current.value = "";
-                navigate("/home");
-            }
-        } catch (err) {
-            setErr("Unexpected error");
-        }
+        dispatch(registerUser({ user, name, email, password, phone })).unwrap().then(()=>{
+            setErr(null);
+            refUser.current.value = "";
+            refName.current.value = "";
+            refEmail.current.value = "";
+            refPassword.current.value = "";
+            refCheckPassword.current.value = "";
+            refPhone.current.value = "";
+            navigate("/home");
+        })
     };
     return (
         <>

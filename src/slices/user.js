@@ -93,8 +93,7 @@ export const registerUser = createAsyncThunk(
     }, {
         withCredentials: true
     });
-
-      return response.data.info;
+      return response.data;
     } catch (error) {
       const errorMsg =
         error?.response?.data?.error || error?.message || "Registration failed";
@@ -206,7 +205,7 @@ const  UserSlice = createSlice({
     },extraReducers:(builder)=>{
         builder
             .addCase(registerUser.fulfilled, (state, action) => {
-                const { data } = action.payload;
+                const  data  = action.payload;
                 state.data = data;
                 state.error = null;
                 const secretKey = process.env.REACT_APP_SECRET_KEY
@@ -218,7 +217,7 @@ const  UserSlice = createSlice({
                 state.error = action.payload;
             })
             .addCase(loginUser.fulfilled, (state, action) => {
-                const info  = action.payload.data.info
+                const info  = action.payload.data
                 state.data = info;
                 state.error = null;
                 const secretKey = process.env.REACT_APP_SECRET_KEY
