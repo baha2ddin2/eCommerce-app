@@ -9,12 +9,14 @@ import {
   Paper,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
+import Alert from '@mui/material/Alert';
 import { addProduct, uploadPicture } from "../../slices/product";
 
 const categories = ["Electronics", "Clothing", "Books", "Phones", "Others"];
 
 export default function AddProductForm({ onSubmit }) {
     const dispatch = useDispatch()
+     const [visibleAlert,setVisibleAlert]=useState(false)
   const [form, setForm] = useState({
     name: "",
     mark: "",
@@ -44,7 +46,13 @@ export default function AddProductForm({ onSubmit }) {
         stock : form.stock
     })).unwrap().then((results)=>{
         console.log(results)
-        dispatch(uploadPicture({file : form.image , id : results.id }))
+        dispatch(uploadPicture({file : form.image , id : results.id })).unwrap()
+        .then(()=>{
+          setVisibleAlert(true)
+        setTimeout(()=>{
+          setVisibleAlert(false)
+        },3000)
+        })
     })
     if (onSubmit) onSubmit(form);
     console.log("Product Submitted:", form);
@@ -132,6 +140,20 @@ export default function AddProductForm({ onSubmit }) {
           </Button>
         </Stack>
       </Box>
+      {visibleAlert &&(
+                      <Alert sx={{
+                        position: 'fixed',
+                        bottom: 16,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: 'fit-content',
+                        fontSize: '0.8rem',
+                        zIndex: 1300,
+                        }} severity="success">
+                        you add the product to the store  successfully
+                      </Alert>
+                    )
+      }
     </Paper>
   );
 }

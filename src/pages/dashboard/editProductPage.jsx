@@ -68,10 +68,10 @@ export default function EditProductForm() {
         category : form.category ,
         stock : form.stock
     })).unwrap().then(()=>{
+      if (form.image){
         dispatch(uploadPicture({id, image : form.image})).unwrap()
-        .then(()=>{
-          navigate("/home/dashboard/bahae22/all-products");
-        })
+      }
+      navigate("/home/dashboard/bahae22/all-products")
     })
   };
 
